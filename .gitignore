@@ -1,5 +1,5 @@
-api.exe
-api.exe*
+front-api.exe
+front-api.exe*
 api
 publish.sh
 runtime/*
