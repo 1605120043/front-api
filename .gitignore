@@ -1,6 +1,6 @@
 front-api.exe
 front-api.exe*
-api
+front-api
 publish.sh
 runtime/*
 debug

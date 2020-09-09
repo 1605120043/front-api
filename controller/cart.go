@@ -23,7 +23,7 @@ func (m *Cart) Add() {
 	m.SetResponse()
 }
 
-// 移除购物车
+// 批量移除购物车商品
 func (m *Cart) Delete() {
 	err := cartFilter.Delete()
 	if err != nil {
@@ -43,4 +43,15 @@ func (m *Cart) Index() {
 	}
 	
 	m.SetResponse(str)
+}
+
+// 批量选择或者取消购物车商品
+func (m *Cart) Selected() {
+	err := cartFilter.Selected()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse()
 }

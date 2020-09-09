@@ -53,6 +53,10 @@ func (v *Validation) Numeric(obj interface{}) *Result {
 	return v.Match(obj, regexp.MustCompile(`^[0-9]+$`))
 }
 
+func (v *Validation) Integer(obj interface{}) *Result {
+	return v.Match(obj, regexp.MustCompile(`^-?\d+$`))
+}
+
 //只允许0或1
 func (v *Validation) Switch(obj interface{}) *Result {
 	return v.Match(obj, regexp.MustCompile(`^[0|1]$`))
