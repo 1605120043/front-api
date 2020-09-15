@@ -46,8 +46,8 @@ func (m *Cart) Index() {
 }
 
 // 批量选择或者取消购物车商品
-func (m *Cart) Selected() {
-	err := cartFilter.Selected()
+func (m *Cart) Checked() {
+	err := cartFilter.Checked()
 	if err != nil {
 		m.SetResponse(nil, err)
 		return

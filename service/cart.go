@@ -80,15 +80,21 @@ func (m *Cart) Add() error {
 }
 
 func (m *Cart) Delete() error {
-	cartIds := m.PostForm("cart_ids")
+	isAll, _ := strconv.ParseInt(m.DefaultPostForm("is_all", "0"), 10, 8)
+	
 	cartIdList := make([]uint64, 0, 32)
-	if err := json.Unmarshal([]byte(cartIds), &cartIdList); err != nil {
-		return fmt.Errorf("请选择购物车商品, err: %v", err)
+	if isAll == 0 { //根据id删除
+		cartIds := m.PostForm("cart_ids")
+		
+		if err := json.Unmarshal([]byte(cartIds), &cartIdList); err != nil {
+			return fmt.Errorf("请选择购物车商品, err: %v", err)
+		}
 	}
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.CartClient.DelCart(ctx, &memberpb.DelCartReq{
+		IsAll:    int32(isAll),
 		CartIds:  cartIdList,
 		MemberId: memberId,
 	})
@@ -206,24 +212,19 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 	return cartMap, nil
 }
 
-func (m *Cart) Selected() error {
-	cartIds := m.PostForm("cart_ids")
-	cartIdList := make([]uint64, 0, 32)
-	if err := json.Unmarshal([]byte(cartIds), &cartIdList); err != nil {
+func (m *Cart) Checked() error {
+	cartChecked := m.PostForm("cart_checked")
+	buf := make([]*memberpb.SelectCart, 0, 32)
+	if err := json.Unmarshal([]byte(cartChecked), &buf); err != nil {
 		return fmt.Errorf("请选择购物车商品, err: %v", err)
 	}
-	isSelect := m.PostForm("is_select")
-	isSelectVal := int32(1)
-	if isSelect == "false" {
-		isSelectVal = 0
-	}
+	
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.CartClient.SelectCart(ctx, &memberpb.SelectCartReq{
-		CartIds:  cartIdList,
-		MemberId: memberId,
-		IsSelect: memberpb.CartIsSelect(isSelectVal),
+		SelectCart: buf,
+		MemberId:   memberId,
 	})
 	cancel()
 	

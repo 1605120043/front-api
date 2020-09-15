@@ -34,8 +34,10 @@ func (m *Cart) Add() error {
 }
 
 func (m *Cart) Delete() error {
+	isAll := m.DefaultPostForm("is_all", "0")
 	cartIds := m.PostForm("cart_ids")
 	
+	m.validation.Switch(isAll).Message("是否删除全部")
 	m.validation.Required(cartIds).Message("请选择购物车商品！")
 	
 	if m.validation.HasError() {
@@ -49,16 +51,14 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 	return service.NewCart(m.Context).Index()
 }
 
-func (m *Cart) Selected() error {
-	cartIds := m.PostForm("cart_ids")
-	isSelect := m.PostForm("is_select")
+func (m *Cart) Checked() error {
+	cartChecked := m.PostForm("cart_checked")
 	
-	m.validation.Required(cartIds).Message("请选择购物车商品！")
-	m.validation.Bool(isSelect).Message("是否选中？")
+	m.validation.Required(cartChecked).Message("请选择购物车商品！")
 	
 	if m.validation.HasError() {
 		return m.validation.GetError()
 	}
 	
-	return service.NewCart(m.Context).Selected()
+	return service.NewCart(m.Context).Checked()
 }

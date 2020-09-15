@@ -13,6 +13,6 @@ func init() {
 		g.Post("/add")
 		g.Post("/delete")
 		g.Get("/index")
-		g.Post("/selected")
+		g.Post("/checked")
 	})
 }
