@@ -26,9 +26,17 @@ func (m *Cart) Add() error {
 	productId, _ := strconv.ParseUint(m.PostForm("product_id"), 10, 64)
 	productSpecId, _ := strconv.ParseUint(m.PostForm("product_spec_id"), 10, 64)
 	nums, _ := strconv.ParseInt(m.PostForm("nums"), 10, 32)
-	isSelect, _ := strconv.ParseInt(m.PostForm("is_select"), 10, 32)
+	isSelect := m.PostForm("is_select")
+	isSelectVal := int32(1)
+	if isSelect == "false" {
+		isSelectVal = 0
+	}
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
-	isPlus := m.GetBool("is_plus")
+	isPlus := m.DefaultPostForm("is_plus", "true") // 默认是叠加
+	isPlusVal := true
+	if isPlus == "false" {
+		isPlusVal = false
+	}
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{ProductSpecId: []uint64{productSpecId}})
@@ -55,9 +63,9 @@ func (m *Cart) Add() error {
 		MemberId:      memberId,
 		ProductId:     productId,
 		ProductSpecId: productSpecId,
-		IsSelect:      memberpb.CartIsSelect(isSelect),
+		IsSelect:      memberpb.CartIsSelect(isSelectVal),
 		Nums:          nums,
-		IsPlus:        isPlus, //true是叠加
+		IsPlus:        isPlusVal, //true是叠加
 	})
 	cancel()
 	
@@ -137,13 +145,17 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 			delCartIds = append(delCartIds, cartList.Carts[k].CartId)
 			continue
 		}
+		var checked bool
+		if cartList.Carts[k].IsSelect == 1 {
+			checked = true
+		}
 		buf := map[string]interface{}{
 			"cart_id":         cartList.Carts[k].CartId,
 			"member_id":       cartList.Carts[k].MemberId,
 			"product_id":      cartList.Carts[k].ProductId,
 			"product_spec_id": cartList.Carts[k].ProductSpecId,
 			"nums":            cartList.Carts[k].Nums,
-			"checked":         cartList.Carts[k].IsSelect,
+			"checked":         checked,
 			//"product":         ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId],
 			"image":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Image,
 			"attr_val": ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Sku,
@@ -200,14 +212,18 @@ func (m *Cart) Selected() error {
 	if err := json.Unmarshal([]byte(cartIds), &cartIdList); err != nil {
 		return fmt.Errorf("请选择购物车商品, err: %v", err)
 	}
-	isSelect, _ := strconv.ParseInt(m.PostForm("is_select"), 10, 32)
+	isSelect := m.PostForm("is_select")
+	isSelectVal := int32(1)
+	if isSelect == "false" {
+		isSelectVal = 0
+	}
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.CartClient.SelectCart(ctx, &memberpb.SelectCartReq{
 		CartIds:  cartIdList,
 		MemberId: memberId,
-		IsSelect: memberpb.CartIsSelect(isSelect),
+		IsSelect: memberpb.CartIsSelect(isSelectVal),
 	})
 	cancel()
 	

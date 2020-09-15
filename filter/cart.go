@@ -24,7 +24,7 @@ func (m *Cart) Add() error {
 	m.validation.Numeric(productId).Message("请选择商品！")
 	m.validation.Numeric(productSpecId).Message("请选择商品！")
 	m.validation.Integer(nums).Message("数量是整形！")
-	m.validation.Switch(isSelect).Message("是否选中？")
+	m.validation.Bool(isSelect).Message("是否选中？")
 	
 	if m.validation.HasError() {
 		return m.validation.GetError()
@@ -54,7 +54,7 @@ func (m *Cart) Selected() error {
 	isSelect := m.PostForm("is_select")
 	
 	m.validation.Required(cartIds).Message("请选择购物车商品！")
-	m.validation.Switch(isSelect).Message("是否选中？")
+	m.validation.Bool(isSelect).Message("是否选中？")
 	
 	if m.validation.HasError() {
 		return m.validation.GetError()

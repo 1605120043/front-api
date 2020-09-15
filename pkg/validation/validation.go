@@ -20,7 +20,7 @@ func (v *Validation) GetError() error {
 	if v.err != nil {
 		return errors.New(v.err.info)
 	}
-
+	
 	return nil
 }
 
@@ -28,7 +28,7 @@ func (v *Validation) GetErroString() string {
 	if v.err != nil {
 		return v.err.info
 	}
-
+	
 	return ""
 }
 
@@ -37,7 +37,7 @@ func (v *Validation) HasError() bool {
 	if v.err != nil {
 		s = true
 	}
-
+	
 	return s
 }
 
@@ -55,6 +55,10 @@ func (v *Validation) Numeric(obj interface{}) *Result {
 
 func (v *Validation) Integer(obj interface{}) *Result {
 	return v.Match(obj, regexp.MustCompile(`^-?\d+$`))
+}
+
+func (v *Validation) Bool(obj interface{}) *Result {
+	return v.Match(obj, regexp.MustCompile(`^(true)|(false)$`))
 }
 
 //只允许0或1
@@ -83,11 +87,11 @@ func (v *Validation) Match(obj interface{}, regex *regexp.Regexp) *Result {
 
 func (v *Validation) apply(chk Validator, obj interface{}) *Result {
 	res := &Result{}
-
+	
 	if v.status {
 		return res
 	}
-
+	
 	if nil == obj {
 		if chk.verify(obj) {
 			return res
@@ -105,10 +109,10 @@ func (v *Validation) apply(chk Validator, obj interface{}) *Result {
 	} else if chk.verify(obj) {
 		return res
 	}
-
+	
 	e := &MyError{}
 	v.setError(e)
 	res.err = e
-
+	
 	return res
 }
