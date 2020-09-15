@@ -28,6 +28,7 @@ func (m *Cart) Add() error {
 	nums, _ := strconv.ParseInt(m.PostForm("nums"), 10, 32)
 	isSelect, _ := strconv.ParseInt(m.PostForm("is_select"), 10, 32)
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
+	isPlus := m.GetBool("is_plus")
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{ProductSpecId: []uint64{productSpecId}})
@@ -56,7 +57,7 @@ func (m *Cart) Add() error {
 		ProductSpecId: productSpecId,
 		IsSelect:      memberpb.CartIsSelect(isSelect),
 		Nums:          nums,
-		IsPlus:        true, //使用叠加
+		IsPlus:        isPlus, //true是叠加
 	})
 	cancel()
 	
@@ -141,9 +142,14 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 			"member_id":       cartList.Carts[k].MemberId,
 			"product_id":      cartList.Carts[k].ProductId,
 			"product_spec_id": cartList.Carts[k].ProductSpecId,
-			"product":         ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId],
 			"nums":            cartList.Carts[k].Nums,
-			"is_select":       cartList.Carts[k].IsSelect,
+			"checked":         cartList.Carts[k].IsSelect,
+			//"product":         ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId],
+			"image":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Image,
+			"attr_val": ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Sku,
+			"title":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Product.Name,
+			"stock":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Stock,
+			"price":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Price,
 		}
 		
 		// 总金额
