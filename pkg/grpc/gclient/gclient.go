@@ -17,8 +17,9 @@ import (
 )
 
 var (
-	ProductClient productpb.ProductServiceClient
-	CartClient    memberpb.CartServiceClient
+	ProductClient         productpb.ProductServiceClient
+	ProductCategoryClient productpb.CategoryServiceClient
+	CartClient            memberpb.CartServiceClient
 )
 
 func DialGrpcService() {
@@ -46,4 +47,5 @@ func pms() {
 	}
 	fmt.Printf("连接成功：%s, host分别为: %s \n", utils.C.Grpc.Name["pms"], strings.Join(utils.C.Etcd.Host, ","))
 	ProductClient = productpb.NewProductServiceClient(conn)
+	ProductCategoryClient = productpb.NewCategoryServiceClient(conn)
 }
