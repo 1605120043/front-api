@@ -23,3 +23,13 @@ func (m *Product) Index() {
 	
 	m.SetResponse(str)
 }
+
+func (m *Product) Detail() {
+	str, err := productFilter.Detail()
+	if err != nil {
+		m.SetResponse(str, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}

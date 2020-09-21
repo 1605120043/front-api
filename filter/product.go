@@ -17,5 +17,30 @@ func NewProduct(c *gin.Context) *Product {
 }
 
 func (m *Product) Index() (*productpb.ListProductRes, error) {
+	categoryId := m.Query("category_id")
+	page := m.DefaultQuery("page", "1")
+	pageSize := m.DefaultQuery("page_size", "20")
+	if len(categoryId) > 0 {
+		m.validation.Numeric(categoryId).Message("分类id不正确")
+	}
+	
+	m.validation.Numeric(page).Message("请求参数错误")
+	m.validation.Numeric(pageSize).Message("请求参数错误")
+	
+	if m.validation.HasError() {
+		return nil, m.validation.GetError()
+	}
+	
 	return service.NewProduct(m.Context).Index()
+}
+
+func (m *Product) Detail() (*productpb.ProductDetail, error) {
+	productIdStr := m.DefaultQuery("product_id", "0")
+	m.validation.Numeric(productIdStr).Message("商品id不正确")
+	
+	if m.validation.HasError() {
+		return nil, m.validation.GetError()
+	}
+	
+	return service.NewProduct(m.Context).Detail()
 }
