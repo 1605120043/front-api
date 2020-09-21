@@ -39,23 +39,26 @@ func (m *Cart) Add() error {
 	}
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	resp, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{ProductSpecId: []uint64{productSpecId}})
+	resp, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{
+		ProductId:     []uint64{productId},
+		ProductSpecId: []uint64{productSpecId},
+	})
 	
 	if err != nil {
 		return fmt.Errorf("添加购物车失败, err:%v", err)
 	}
-	productSpec := resp.ProductSpecs[0]
+	productSpec := resp.Products[0].Spec
 	
-	if productSpec.ProductId != productId {
+	if len(productSpec) == 0 {
 		return fmt.Errorf("商品不存在")
 	}
 	
-	if productSpec.Product.Status != productpb.ProductStatus_Disabled {
-		return fmt.Errorf("商品:%s, 已下架", productSpec.Product.Name)
+	if resp.Products[0].Status != productpb.ProductStatus_Disabled {
+		return fmt.Errorf("商品:%s, 已下架", resp.Products[0].Name)
 	}
 	
-	if int64(productSpec.Stock) < nums {
-		return fmt.Errorf("商品:%s (%s), 库存不足", productSpec.Product.Name, productSpec.Sku)
+	if int64(productSpec[0].Stock) < nums {
+		return fmt.Errorf("商品:%s (%s), 库存不足", resp.Products[0].Name, productSpec[0].Sku)
 	}
 	
 	// 加入购物车
@@ -119,19 +122,38 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 		return nil, fmt.Errorf("获取购物车列表失败, err:%v", err)
 	}
 	
-	productSpecIds := make([]uint64, 0, len(cartList.Carts))
+	cartLen := len(cartList.Carts)
+	productIds := make([]uint64, 0, cartLen)
+	productSpecIds := make([]uint64, 0, cartLen)
 	for k := range cartList.Carts {
+		productIds = append(productIds, cartList.Carts[k].ProductId)
 		productSpecIds = append(productSpecIds, cartList.Carts[k].ProductSpecId)
 	}
-	productSpecList, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{ProductSpecId: productSpecIds})
+	productList, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{
+		ProductId:     productIds,
+		ProductSpecId: productSpecIds,
+	})
 	
 	if err != nil {
 		return nil, fmt.Errorf("获取购物车列表失败, err:%v", err)
 	}
 	
-	ProductSpecKeyByProductSpecId := make(map[uint64]*productpb.ListProductSpecRes_ProductSpec, len(productSpecList.ProductSpecs))
-	for _, spec := range productSpecList.ProductSpecs {
-		ProductSpecKeyByProductSpecId[spec.ProductSpecId] = spec
+	type ProductSpec struct {
+		Detail *productpb.ProductDetail
+		Spec   *productpb.ProductSpec
+	}
+	ProductSpecKeyByProductSpecId := make(map[uint64]ProductSpec, 32)
+	for _, p := range productList.Products {
+		// 无规格跳过
+		if len(p.Spec) == 0 {
+			continue
+		}
+		for _, s := range p.Spec {
+			ProductSpecKeyByProductSpecId[s.ProductSpecId] = ProductSpec{
+				Detail: p,
+				Spec:   s,
+			}
+		}
 	}
 	
 	var (
@@ -163,18 +185,18 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 			"nums":            cartList.Carts[k].Nums,
 			"checked":         checked,
 			//"product":         ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId],
-			"image":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Image,
-			"attr_val": ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Sku,
-			"title":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Product.Name,
-			"stock":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Stock,
-			"price":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Price,
+			"image":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Detail.Images[0],
+			"attr_val": ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Sku,
+			"title":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Detail.Name,
+			"stock":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Stock,
+			"price":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Price,
 		}
 		
-		// 总金额
-		amount, _ = decimal.NewFromFloat(amount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].OldPrice)).Float64()
+		//总金额
+		amount, _ = decimal.NewFromFloat(amount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.OldPrice)).Float64()
 		
 		// 商品总金额
-		productAmount, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Price)).Float64()
+		productAmount, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Price)).Float64()
 		
 		//订单促销金额
 		//商品促销金额
@@ -183,7 +205,7 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 		//运费
 		
 		//商品总重
-		weight, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Weight)).Float64()
+		weight, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Weight)).Float64()
 		
 		list = append(list, buf)
 	}
