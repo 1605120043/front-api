@@ -97,7 +97,13 @@ func (r *Router) Options(url string, method ...string) {
 }
 
 func (r *Router) bindMethod(methodName string) gin.HandlerFunc {
+	typ := reflect.TypeOf(r.Ctl)
+	if typ.Kind() != reflect.Ptr {
+		panic("controller is not ptr type")
+	}
+
 	reflectValue := reflect.ValueOf(r.Ctl)
+	reflectValue = reflect.New(reflectValue.Elem().Type())
 	execController, ok := reflectValue.Interface().(ctl.ControllerInterface)
 	if !ok {
 		panic("controller is not ControllerInterface")
