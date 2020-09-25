@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"time"
 	
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/basepb"
 	"github.com/shinmigo/pb/memberpb"
@@ -56,8 +55,6 @@ func (m *Address) Index() ([]*address.AddressList, error) {
 		}
 		
 		for k := range addressList.Addresses {
-			spew.Dump(addressList.Addresses)
-			
 			isDefault := false
 			if addressList.Addresses[k].IsDefault == memberpb.AddressIsDefault_Used {
 				isDefault = true

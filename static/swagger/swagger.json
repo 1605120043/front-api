@@ -1,0 +1,476 @@
+{
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "goshop接口文档",
+    "title": "goShop Api　",
+    "version": "1.0.0"
+  },
+  "host": "127.0.0.1:8099",
+  "paths": {
+    "/address/add": {
+      "post": {
+        "description": "根据登录用户， 添加收货地址",
+        "tags": [
+          "用户收货地址"
+        ],
+        "summary": "添加收货地址",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "收货人",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "手机号",
+            "name": "mobile",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "省",
+            "name": "code_prov",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "市",
+            "name": "code_city",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "区",
+            "name": "code_coun",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "详情地址",
+            "name": "address",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "门牌号，楼房号",
+            "name": "room_number",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "是否默认(false|true)",
+            "name": "is_default",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/address/detail": {
+      "get": {
+        "description": "根据收货地址Id，获取用户收货地址详情",
+        "tags": [
+          "用户收货地址"
+        ],
+        "summary": "获取用户收货地址详情",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "收货地址id",
+            "name": "address_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/address/edit": {
+      "post": {
+        "description": "根据收货地址Id， 编辑收货地址",
+        "tags": [
+          "用户收货地址"
+        ],
+        "summary": "编辑收货地址",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "用户收货地址Id",
+            "name": "address_id",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "收货人",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "手机号",
+            "name": "mobile",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "省",
+            "name": "code_prov",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "市",
+            "name": "code_city",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "区",
+            "name": "code_coun",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "详情地址",
+            "name": "address",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "门牌号，楼房号",
+            "name": "room_number",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "是否默认(false|true)",
+            "name": "is_default",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/address/index": {
+      "get": {
+        "description": "根据登录用户获取用户收货地址列表",
+        "tags": [
+          "用户收货地址"
+        ],
+        "summary": "获取用户收货地址",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/cart/add": {
+      "post": {
+        "description": "添加购物车",
+        "tags": [
+          "购物车"
+        ],
+        "summary": "添加购物车",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "商品id",
+            "name": "product_id",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "商品规格id",
+            "name": "product_spec_id",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "数量",
+            "name": "nums",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "是否是叠加还是覆盖(true|false), 默认是叠加",
+            "name": "is_plus",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "是否选中(true|false)",
+            "name": "is_select",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/cart/checked": {
+      "post": {
+        "description": "根据登录用户获取购物车",
+        "tags": [
+          "购物车"
+        ],
+        "summary": "获取购物车",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "购物车json, [1, 2, 3]",
+            "name": "cart_checked",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/cart/delete": {
+      "post": {
+        "description": "删除购物车",
+        "tags": [
+          "购物车"
+        ],
+        "summary": "删除购物车",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "是否全部(1|0), 1全部，选择全部，则无视cart_ids, 清除该登录用户购物车, cart_ids传[]",
+            "name": "is_all",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "购物车json, [1, 2, 3]",
+            "name": "cart_ids",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/cart/index": {
+      "get": {
+        "description": "根据登录用户获取购物车",
+        "tags": [
+          "购物车"
+        ],
+        "summary": "获取购物车",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/category/index": {
+      "get": {
+        "description": "获取全部分类列表",
+        "tags": [
+          "分类"
+        ],
+        "summary": "获取分类列表",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/common/get-area-list": {
+      "get": {
+        "description": "获取区域省市区列表，已归类",
+        "tags": [
+          "省市区"
+        ],
+        "summary": "获取区域省市区",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/product/detail": {
+      "get": {
+        "description": "根据商品id，获取商品详情",
+        "tags": [
+          "商品"
+        ],
+        "summary": "获取商品详情",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "商品id",
+            "name": "product_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/product/index": {
+      "get": {
+        "description": "获取区域省市区列表，已归类",
+        "tags": [
+          "商品"
+        ],
+        "summary": "获取商品列表",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "可根据分类id获取商品列表",
+            "name": "category_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "页码",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "条数,默认20",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "resp": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "提示码",
+          "type": "integer"
+        },
+        "data": {
+          "type": "object"
+        },
+        "message": {
+          "description": "消息",
+          "type": "string"
+        },
+        "run_time": {
+          "description": "运行时间",
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "APIKeyHeader": {
+      "type": "apiKey",
+      "name": "goshop-token",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "APIKeyHeader": []
+    }
+  ]
+}

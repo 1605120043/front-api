@@ -1,0 +1,50 @@
+/product/index:
+  get:
+    summary: 获取商品列表
+    description: 获取区域省市区列表，已归类
+    tags:
+      - 商品
+    parameters:
+      - name: category_id
+        in: query
+        description: 可根据分类id获取商品列表
+        required: false
+        type: integer
+
+      - name: page
+        in: query
+        description: 页码
+        required: false
+        type: integer
+
+      - name: page_size
+        in: query
+        description: 条数,默认20
+        required: false
+        type: integer
+
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+
+/product/detail:
+  get:
+    summary: 获取商品详情
+    description: 根据商品id，获取商品详情
+    tags:
+      - 商品
+    parameters:
+      - name: product_id
+        in: query
+        description: 商品id
+        required: true
+        type: integer
+
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+

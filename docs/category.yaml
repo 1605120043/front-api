@@ -1,0 +1,12 @@
+/category/index:
+  get:
+    summary: 获取分类列表
+    description: 获取全部分类列表
+    tags:
+      - 分类
+    parameters:
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'

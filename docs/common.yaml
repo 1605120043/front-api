@@ -1,0 +1,12 @@
+/common/get-area-list:
+  get:
+    summary: 获取区域省市区
+    description: 获取区域省市区列表，已归类
+    tags:
+      - 省市区
+    parameters:
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'

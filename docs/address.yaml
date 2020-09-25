@@ -1,0 +1,159 @@
+/address/index:
+  get:
+    summary: 获取用户收货地址
+    description: 根据登录用户获取用户收货地址列表
+    tags:
+      - 用户收货地址
+    parameters:
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+
+/address/detail:
+  get:
+    summary: 获取用户收货地址详情
+    description: 根据收货地址Id，获取用户收货地址详情
+    tags:
+      - 用户收货地址
+    parameters:
+      - name: address_id
+        in: query
+        description: 收货地址id
+        required: true
+        type: integer
+
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+
+/address/add:
+  post:
+    summary: 添加收货地址
+    description: 根据登录用户， 添加收货地址
+    tags:
+      - 用户收货地址
+    parameters:
+      - name: name
+        in: formData
+        description: 收货人
+        required: true
+        type: string
+
+      - name: mobile
+        in: formData
+        description: 手机号
+        required: true
+        type: string
+
+      - name: code_prov
+        in: formData
+        description: 省
+        required: true
+        type: integer
+
+      - name: code_city
+        in: formData
+        description: 市
+        required: true
+        type: integer
+
+      - name: code_coun
+        in: formData
+        description: 区
+        required: true
+        type: integer
+
+      - name: address
+        in: formData
+        description: 详情地址
+        required: true
+        type: string
+
+      - name: room_number
+        in: formData
+        description: 门牌号，楼房号
+        required: true
+        type: string
+
+      - name: is_default
+        in: formData
+        description: 是否默认(false|true)
+        required: true
+        type: string
+
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+
+/address/edit:
+  post:
+    summary: 编辑收货地址
+    description: 根据收货地址Id， 编辑收货地址
+    tags:
+      - 用户收货地址
+    parameters:
+      - name: address_id
+        in: formData
+        description: 用户收货地址Id
+        required: true
+        type: integer
+
+      - name: name
+        in: formData
+        description: 收货人
+        required: true
+        type: string
+
+      - name: mobile
+        in: formData
+        description: 手机号
+        required: true
+        type: string
+
+      - name: code_prov
+        in: formData
+        description: 省
+        required: true
+        type: integer
+
+      - name: code_city
+        in: formData
+        description: 市
+        required: true
+        type: integer
+
+      - name: code_coun
+        in: formData
+        description: 区
+        required: true
+        type: integer
+
+      - name: address
+        in: formData
+        description: 详情地址
+        required: true
+        type: string
+
+      - name: room_number
+        in: formData
+        description: 门牌号，楼房号
+        required: true
+        type: string
+
+      - name: is_default
+        in: formData
+        description: 是否默认(false|true)
+        required: true
+        type: string
+
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
