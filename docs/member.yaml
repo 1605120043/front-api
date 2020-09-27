@@ -1,0 +1,12 @@
+/member/info:
+  get:
+    summary: 获取用户详情
+    description: 根据登录用户获取用户详情
+    tags:
+      - 用户
+    parameters:
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'

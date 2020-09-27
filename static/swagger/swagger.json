@@ -445,6 +445,23 @@
         }
       }
     },
+    "/member/info": {
+      "get": {
+        "description": "根据登录用户获取用户详情",
+        "tags": [
+          "用户"
+        ],
+        "summary": "获取用户详情",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
     "/product/detail": {
       "get": {
         "description": "根据商品id，获取商品详情",
@@ -534,7 +551,7 @@
   "securityDefinitions": {
     "APIKeyHeader": {
       "type": "apiKey",
-      "name": "goshop-token",
+      "name": "token",
       "in": "header"
     }
   },

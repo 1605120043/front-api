@@ -14,7 +14,7 @@ securityDefinitions:
   APIKeyHeader:
     type: apiKey
     in: header
-    name: goshop-token
+    name: token
 
 security:
   - APIKeyHeader: []
