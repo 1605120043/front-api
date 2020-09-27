@@ -295,13 +295,68 @@ paths:
      summary: 获取区域省市区
      description: 获取区域省市区列表，已归类
      tags:
-       - 省市区
+       - 公共
      parameters:
      responses:
        200:
          description: 成功
          schema:
            $ref: '#/definitions/resp'
+ 
+ /common/mobile-login:
+   post:
+     summary: 登录
+     description: 根据手机号密码登录
+     tags:
+       - 公共
+     parameters:
+       - name: mobile
+         in: formData
+         description: 手机号码
+         required: true
+         type: string
+ 
+       - name: password
+         in: formData
+         description: 登录密码
+         required: true
+         type: string
+ 
+     responses:
+       200:
+         description: 成功
+         schema:
+           $ref: '#/definitions/resp'
+ 
+ /common/mobile-register:
+   post:
+     summary: 注册
+     description: 根据手机号密码注册
+     tags:
+       - 公共
+     parameters:
+       - name: mobile
+         in: formData
+         description: 手机号码
+         required: true
+         type: string
+ 
+       - name: code
+         in: formData
+         description: 手机验证码， 暂无先使用 0000
+         required: true
+         type: string
+ 
+       - name: password
+         in: formData
+         description: 登录密码
+         required: true
+         type: string
+ 
+     responses:
+       200:
+         description: 成功
+         schema:
  /product/index:
    get:
      summary: 获取商品列表

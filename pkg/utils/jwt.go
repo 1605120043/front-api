@@ -13,8 +13,8 @@ const (
 )
 
 type User struct {
-	UserId   uint64 `json:"user_id"`
-	Username string `json:"username"`
+	UserId uint64 `json:"user_id"`
+	Mobile string `json:"mobile"`
 }
 
 type MyCustomClaims struct {
@@ -22,24 +22,24 @@ type MyCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func GenerateToken(userId uint64, username string) (tokenString string, err error) {
+func GenerateToken(userId uint64, mobile string) (tokenString string, expireAt int64, err error) {
 	mySigningKey := []byte(KEY)
-	expireAt := time.Now().Add(time.Second * time.Duration(DEFAULT_EXPIRE_SECONDS)).Unix()
-	user := User{userId, username}
+	expireAt = time.Now().Add(time.Second * time.Duration(DEFAULT_EXPIRE_SECONDS)).Unix()
+	user := User{userId, mobile}
 	claims := MyCustomClaims{
 		user,
 		jwt.StandardClaims{
 			ExpiresAt: expireAt,
-			Issuer:    user.Username,
+			Issuer:    user.Mobile,
 			IssuedAt:  time.Now().Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err = token.SignedString(mySigningKey)
 	if err != nil {
-		return "", fmt.Errorf("生成令牌失败 !! error :%v", err)
+		return "", 0, fmt.Errorf("生成令牌失败 !! error :%v", err)
 	}
-	return tokenString, nil
+	return tokenString, expireAt, nil
 }
 
 func ValidateToken(tokenString string) (user *User, err error) {
@@ -56,8 +56,8 @@ func ValidateToken(tokenString string) (user *User, err error) {
 	
 	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
 		user = &User{
-			UserId:   claims.User.UserId,
-			Username: claims.User.Username,
+			UserId: claims.User.UserId,
+			Mobile: claims.User.Mobile,
 		}
 		return
 	}

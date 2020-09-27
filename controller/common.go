@@ -21,3 +21,23 @@ func (m *Common) GetAreaList() {
 	
 	m.SetResponse(str)
 }
+
+func (m *Common) MobileLogin() {
+	str, err := commonFilter.MobileLoginByPassword()
+	if err != nil {
+		m.SetResponse(str, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}
+
+func (m *Common) MobileRegister() {
+	str, err := commonFilter.MobileRegisterByPassword()
+	if err != nil {
+		m.SetResponse(str, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}

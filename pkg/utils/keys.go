@@ -4,6 +4,6 @@ import (
 	"fmt"
 )
 
-func UserTokenKey(userId uint64) string {
-	return fmt.Sprintf("goshop:user:token::%d", userId)
+func MemberTokenKey(userId uint64) string {
+	return fmt.Sprintf("goshop:member:token::%d", userId)
 }
