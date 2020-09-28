@@ -431,6 +431,10 @@ github.com/shinmigo/pb v0.0.0-20200824073148-ec760819dac4 h1:VS3xF/AO4kPI/w/5ePJ
 github.com/shinmigo/pb v0.0.0-20200824073148-ec760819dac4/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
 github.com/shinmigo/pb v0.0.0-20200826090929-885bdcf83c49 h1:2fEmiFr5LAz6uwDV7OUsAeMwP2eQKOPB5Ao3sqgVV3M=
 github.com/shinmigo/pb v0.0.0-20200826090929-885bdcf83c49/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
+github.com/shinmigo/pb v0.0.0-20200927040138-94bedbe63add h1:/Xgg2eXc+HBotls4vRg75gyOxC3l6lh8iyVoaULZeE4=
+github.com/shinmigo/pb v0.0.0-20200927040138-94bedbe63add/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
+github.com/shinmigo/pb v0.0.0-20200928022856-ec51c94da789 h1:ajvEriAhGWYdeMeNGKmda/1Bww0UNFNeX4l/GC3Lxt0=
+github.com/shinmigo/pb v0.0.0-20200928022856-ec51c94da789/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
 github.com/shopspring/decimal v1.2.0 h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=

@@ -34,7 +34,7 @@ require (
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.3.0 // indirect
-	github.com/shinmigo/pb v0.0.0-20200826090929-885bdcf83c49
+	github.com/shinmigo/pb v0.0.0-20200928022856-ec51c94da789
 	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/afero v1.3.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
@@ -53,4 +53,3 @@ require (
 	gopkg.in/ini.v1 v1.57.0 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
-
