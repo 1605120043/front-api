@@ -18,6 +18,16 @@ func (m *Member) Info() {
 		m.SetResponse(str, err)
 		return
 	}
-	
+
 	m.SetResponse(str)
+}
+
+func (m *Member) Update() {
+	res, err := memberFilter.Update()
+	if err != nil {
+		m.SetResponse(res, err)
+		return
+	}
+
+	m.SetResponse(res)
 }

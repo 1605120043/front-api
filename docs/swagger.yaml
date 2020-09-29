@@ -369,6 +369,83 @@ paths:
          description: 成功
          schema:
            $ref: '#/definitions/resp'
+ 
+ /member/update:
+   post:
+     summary: 编辑会员信息
+     description: 编辑会员信息
+     tags:
+       - 会员
+     parameters:
+       - name: nickname
+         in: formData
+         description: 昵称
+         required: true
+         type: string
+       - name: gender
+         in: formData
+         description: 性别（0：无|1:女|2：男）
+         required: true
+         type: integer
+       - name: birthday
+         in: formData
+         description: 出生年月（格式：1901-01-01）
+         required: false
+         type: string
+       - name: avatar
+         in: formData
+         description: 头像(值：图片ID字符串)
+         required: true
+         type: string
+     responses:
+       200:
+         description: 成功
+         schema:
+           $ref: '#/definitions/resp'
+ /order/index:
+   get:
+     summary: 根据登陆用户获取订单列表
+     description: 根据登陆用户获取订单列表
+     tags:
+       - 订单
+     parameters:
+       - name: page
+         in: query
+         description: 页码
+         required: false
+         type: integer
+       - name: page_size
+         in: query
+         description: 每页显示记录数
+         required: false
+         type: integer
+       - name: order_status
+         in: query
+         description: 订单状态（1：待付款|2：待审核|3：待发货|4：待收获|5：完成|6：待评价|默认值0为：全部订单）
+         required: false
+         type: integer
+     responses:
+       200:
+         description: 成功
+         schema:
+           $ref: '#/definitions/resp'
+ 
+ /order/info:
+   get:
+     summary: 获取用户订单详情
+     description: 根据登录用户获取订单详情
+     tags:
+       - 订单
+     parameters:
+       - name: order_id
+         in: query
+         description: 订单ID
+         required: true
+         type: integer
+     responses:
+       200:
+         description: 成功
+         schema:
  /product/index:
    get:
      summary: 获取商品列表
