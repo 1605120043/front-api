@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"log"
 	"strings"
-
+	
 	"github.com/shinmigo/pb/orderpb"
-
+	
 	"goshop/front-api/pkg/grpc/etcd3"
 	"goshop/front-api/pkg/utils"
-
+	
 	"github.com/shinmigo/pb/shoppb"
-
+	
 	"github.com/shinmigo/pb/memberpb"
-
+	
 	"github.com/shinmigo/pb/productpb"
-
+	
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"
 )
@@ -28,6 +28,7 @@ var (
 	MemberClient          memberpb.MemberServiceClient
 	AreaClient            shoppb.AreaServiceClient
 	OrderClient           orderpb.OrderServiceClient
+	TagClient             productpb.TagServiceClient
 )
 
 func DialGrpcService() {
@@ -60,6 +61,7 @@ func pms() {
 	fmt.Printf("连接成功：%s, host分别为: %s \n", utils.C.Grpc.Name["pms"], strings.Join(utils.C.Etcd.Host, ","))
 	ProductClient = productpb.NewProductServiceClient(conn)
 	ProductCategoryClient = productpb.NewCategoryServiceClient(conn)
+	TagClient = productpb.NewTagServiceClient(conn)
 }
 
 func shop() {

@@ -83,7 +83,7 @@ func (o *Order) Info(userId, orderId uint64) (info *order.DetailOrderRes, err er
 		ShippingStatus: listRes.Orders[0].ShippingStatus,
 		ShippingTime:   listRes.Orders[0].PaymentTime,
 		Confirm:        listRes.Orders[0].Confirm,
-		ConfirmTime:    listRes.Orders[0].ConfigTime,
+		//ConfirmTime:    listRes.Orders[0].ConfigTime,
 		OrderStatus:    listRes.Orders[0].OrderStatus,
 		RefundStatus:   listRes.Orders[0].RefundStatus,
 		ReturnStatus:   listRes.Orders[0].ReturnStatus,

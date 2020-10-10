@@ -12,7 +12,7 @@
     "title": "goShop Api　",
     "version": "1.0.0"
   },
-  "host": "127.0.0.1:8099",
+  "host": "127.0.0.1:8199",
   "paths": {
     "/address/add": {
       "post": {
@@ -596,7 +596,6 @@
     },
     "/product/index": {
       "get": {
-        "description": "获取区域省市区列表，已归类",
         "tags": [
           "商品"
         ],
@@ -606,6 +605,12 @@
             "type": "integer",
             "description": "可根据分类id获取商品列表",
             "name": "category_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "可根据标签id获取商品列表",
+            "name": "tag_id",
             "in": "query"
           },
           {
@@ -621,6 +626,22 @@
             "in": "query"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/product/tag": {
+      "get": {
+        "tags": [
+          "商品"
+        ],
+        "summary": "获取标签列表",
         "responses": {
           "200": {
             "description": "成功",

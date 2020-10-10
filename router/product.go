@@ -9,6 +9,7 @@ import (
 func init() {
 	routerhelper.Use(func(r *gin.Engine) {
 		g := routerhelper.NewGroupRouter("product", new(controller.Product), r)
+		g.Get("/tag")
 		g.Get("/index")
 		g.Get("/detail")
 	})

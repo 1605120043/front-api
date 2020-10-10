@@ -33,3 +33,14 @@ func (m *Product) Detail() {
 	
 	m.SetResponse(str)
 }
+
+// 获取商品标签列表
+func (m *Product) Tag() {
+	str, err := productFilter.Tag()
+	if err != nil {
+		m.SetResponse(str, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}
