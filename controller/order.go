@@ -31,3 +31,13 @@ func (m *Order) Info() {
 
 	m.SetResponse(info)
 }
+
+func (m *Order) GetUserOrderStatusCount() {
+	list, err := orderFilter.GetUserOrderStatusCount()
+	if err != nil {
+		m.SetResponse(list, err)
+		return
+	}
+
+	m.SetResponse(list)
+}

@@ -58,3 +58,8 @@ type ListOrderRes struct {
 	Total  uint64                `json:"total"`
 	Orders []*ListDetailOrderRes `json:"orders"`
 }
+
+type UserOrderStatusCountRes struct {
+	OrderStatus uint64 `json:"order_status"`
+	Count       uint64 `json:"count"`
+}

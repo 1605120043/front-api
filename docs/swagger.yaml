@@ -446,6 +446,18 @@ paths:
        200:
          description: 成功
          schema:
+           $ref: '#/definitions/resp'
+ 
+ /get-user-order-status-count:
+   get:
+     summary: 获取用户订单状态统计
+     description: 根据登录用户获取订单状态统计
+     tags:
+       - 订单
+     responses:
+       200:
+         description: 成功
+         schema:
  /product/tag:
    get:
      summary: 获取标签列表

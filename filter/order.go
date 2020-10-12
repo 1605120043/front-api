@@ -61,3 +61,10 @@ func (m *Order) Info() (*order.DetailOrderRes, error) {
 	orderIdNum, _ := strconv.ParseUint(orderId, 10, 64)
 	return service.NewOrder(m.Context).Info(memberId, orderIdNum)
 }
+
+func (m *Order) GetUserOrderStatusCount() (list []*order.UserOrderStatusCountRes, err error) {
+	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
+
+	list, err = service.NewOrder(m.Context).GetUserOrderStatusCount(memberId)
+	return
+}

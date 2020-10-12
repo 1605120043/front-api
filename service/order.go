@@ -84,15 +84,40 @@ func (o *Order) Info(userId, orderId uint64) (info *order.DetailOrderRes, err er
 		ShippingTime:   listRes.Orders[0].PaymentTime,
 		Confirm:        listRes.Orders[0].Confirm,
 		//ConfirmTime:    listRes.Orders[0].ConfigTime,
-		OrderStatus:    listRes.Orders[0].OrderStatus,
-		RefundStatus:   listRes.Orders[0].RefundStatus,
-		ReturnStatus:   listRes.Orders[0].ReturnStatus,
-		UserNote:       listRes.Orders[0].UserNote,
-		OrderItems:     listRes.Orders[0].OrderItems,
-		OrderAddress:   listRes.Orders[0].OrderAddress,
-		OrderPayment:   listRes.Orders[0].OrderPayment,
-		OrderShipment:  listRes.Orders[0].OrderShipment,
-		CreatedAt:      listRes.Orders[0].CreatedAt,
+		OrderStatus:   listRes.Orders[0].OrderStatus,
+		RefundStatus:  listRes.Orders[0].RefundStatus,
+		ReturnStatus:  listRes.Orders[0].ReturnStatus,
+		UserNote:      listRes.Orders[0].UserNote,
+		OrderItems:    listRes.Orders[0].OrderItems,
+		OrderAddress:  listRes.Orders[0].OrderAddress,
+		OrderPayment:  listRes.Orders[0].OrderPayment,
+		OrderShipment: listRes.Orders[0].OrderShipment,
+		CreatedAt:     listRes.Orders[0].CreatedAt,
+	}
+
+	return
+}
+
+func (o *Order) GetUserOrderStatusCount(userId uint64) (orderStatusCountList []*order.UserOrderStatusCountRes, err error) {
+	req := &orderpb.GetOrderStatusReq{
+		MemberId: userId,
+	}
+
+	orderStatusCountList = make([]*order.UserOrderStatusCountRes, 0, 16)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	info, err := gclient.OrderClient.GetOrderStatus(ctx, req)
+	cancel()
+	if err != nil {
+		return orderStatusCountList, fmt.Errorf("获取订单信息失败， err：%v", err)
+	}
+	if info == nil || info.OrderStatistics == nil {
+		return
+	}
+	for i := range info.OrderStatistics {
+		orderStatusCountList = append(orderStatusCountList, &order.UserOrderStatusCountRes{
+			OrderStatus: info.OrderStatistics[i].OrderStatus,
+			Count:       info.OrderStatistics[i].Count,
+		})
 	}
 
 	return

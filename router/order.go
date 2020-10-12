@@ -13,5 +13,6 @@ func init() {
 		g := routerhelper.NewGroupRouter("order", new(controller.Order), r, middleware.VerifyToken())
 		g.Get("/index")
 		g.Get("/info")
+		g.Get("/get-user-order-status-count", "GetUserOrderStatusCount")
 	})
 }

@@ -445,6 +445,20 @@
         }
       }
     },
+    "/get-user-order-status-count": {
+      "get": {
+        "description": "根据登录用户获取订单状态统计",
+        "tags": [
+          "订单"
+        ],
+        "summary": "获取用户订单状态统计",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
     "/member/info": {
       "get": {
         "description": "根据登录用户获取用户详情",
@@ -563,7 +577,10 @@
         ],
         "responses": {
           "200": {
-            "description": "成功"
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
           }
         }
       }
