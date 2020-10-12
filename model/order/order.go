@@ -22,11 +22,12 @@ type ShipmentOrderRes struct {
 }
 
 type ListDetailOrderRes struct {
-	OrderId     uint64                            `json:"order_id"`
-	GrandTotal  float64                           `json:"grand_total"`
-	OrderStatus orderpb.OrderStatus               `json:"order_status"`
-	OrderItems  []*orderpb.OrderDetail_OrderItems `json:"order_items"`
-	CreatedAt   string                            `json:"created_at"`
+	OrderId         uint64                            `json:"order_id"`
+	GrandTotal      float64                           `json:"grand_total"`
+	OrderStatus     orderpb.OrderStatus               `json:"order_status"`
+	OrderStatusName string                            `json:"order_status_name"`
+	OrderItems      []*orderpb.OrderDetail_OrderItems `json:"order_items"`
+	CreatedAt       string                            `json:"created_at"`
 }
 
 type DetailOrderRes struct {
