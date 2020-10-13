@@ -34,7 +34,7 @@ func (m *Category) Index(param *productpb.ListCategoryReq) ([]*product.CategoryL
 				Id:   res.Categories[k].CategoryId,
 				Pid:  res.Categories[k].ParentId,
 				Name: res.Categories[k].Name,
-				Icon: "https://img01.yimishiji.com/v1/img/" + res.Categories[k].Icon,
+				Icon: res.Categories[k].Icon,
 				Sort: res.Categories[k].Sort,
 			})
 		}
