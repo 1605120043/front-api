@@ -25,8 +25,14 @@ func NewAddress(c *gin.Context) *Address {
 func (m *Address) Index() ([]*address.AddressList, error) {
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	
+	// 一个用户最多10条地址
+	pageSize := m.DefaultQuery("page_size", "10")
+	pageSizeNum, _ := strconv.ParseUint(pageSize, 10, 64)
+	
 	req := &memberpb.ListAddressReq{
 		MemberId: memberId,
+		Page:     1,
+		PageSize: pageSizeNum,
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	addressList, err := gclient.AddressClient.GetAddressListByMemberId(ctx, req)

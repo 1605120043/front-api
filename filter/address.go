@@ -1,6 +1,8 @@
 package filter
 
 import (
+	"regexp"
+	
 	"github.com/gin-gonic/gin"
 	"goshop/front-api/model/address"
 	"goshop/front-api/pkg/validation"
@@ -17,10 +19,24 @@ func NewAddress(c *gin.Context) *Address {
 }
 
 func (m *Address) Index() ([]*address.AddressList, error) {
+	pageSize := m.DefaultQuery("page_size", "10")
+	
+	valid := validation.Validation{}
+	valid.Match(pageSize, regexp.MustCompile(`^[0-9]{1,3}$`)).Message("拉取格式不正确")
+	if valid.HasError() {
+		return nil, valid.GetError()
+	}
+	
 	return service.NewAddress(m.Context).Index()
 }
 
 func (m *Address) Detail() (*address.AddressDetail, error) {
+	addressId := m.Query("address_id")
+	m.validation.Numeric(addressId).Message("参数错误！")
+	
+	if m.validation.HasError() {
+		return nil, m.validation.GetError()
+	}
 	return service.NewAddress(m.Context).Detail()
 }
 
