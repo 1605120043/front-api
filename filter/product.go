@@ -17,7 +17,7 @@ func NewProduct(c *gin.Context) *Product {
 	return &Product{Context: c, validation: validation.Validation{}}
 }
 
-func (m *Product) Index() (*productpb.ListProductRes, error) {
+func (m *Product) Index() ([]*product.ProductList, error) {
 	categoryId := m.Query("category_id")
 	tagId := m.Query("tag_id")
 	page := m.DefaultQuery("page", "1")
@@ -51,6 +51,6 @@ func (m *Product) Detail() (*productpb.ProductDetail, error) {
 	return service.NewProduct(m.Context).Detail()
 }
 
-func (m *Product) Tag() ([]*product.Tag, error) {
+func (m *Product) Tag() ([]*product.TagList, error) {
 	return service.NewProduct(m.Context).Tag()
 }

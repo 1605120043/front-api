@@ -20,7 +20,7 @@ func NewProduct(c *gin.Context) *Product {
 	return &Product{Context: c}
 }
 
-func (m *Product) Index() (*productpb.ListProductRes, error) {
+func (m *Product) Index() ([]*product.ProductList, error) {
 	categoryId, _ := strconv.ParseUint(m.DefaultQuery("category_id", "0"), 10, 64)
 	tagId, _ := strconv.ParseUint(m.DefaultQuery("tag_id", "0"), 10, 64)
 	page, _ := strconv.ParseUint(m.DefaultQuery("page", "1"), 10, 64)
@@ -33,10 +33,31 @@ func (m *Product) Index() (*productpb.ListProductRes, error) {
 	}
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	productList, err := gclient.ProductClient.GetProductList(ctx, req)
+	listRes, err := gclient.ProductClient.GetProductList(ctx, req)
 	cancel()
 	
-	return productList, err
+	list := make([]*product.ProductList, 0, pageSize)
+	if listRes == nil {
+		return list, fmt.Errorf("获取商品失败")
+	}
+	if listRes.Total == 0 {
+		return list, fmt.Errorf("获取商品失败")
+	}
+	
+	for k := range listRes.Products {
+		var image string
+		if len(listRes.Products[k].Images) > 0 {
+			image = listRes.Products[k].Images[0]
+		}
+		
+		list = append(list, &product.ProductList{
+			ProductId: listRes.Products[k].ProductId,
+			Name:      listRes.Products[k].Name,
+			Image:     image,
+			Price:     listRes.Products[k].Price,
+		})
+	}
+	return list, err
 }
 
 func (m *Product) Detail() (*productpb.ProductDetail, error) {
@@ -60,7 +81,7 @@ func (m *Product) Detail() (*productpb.ProductDetail, error) {
 	return productList.Products[0], nil
 }
 
-func (m *Product) Tag() ([]*product.Tag, error) {
+func (m *Product) Tag() ([]*product.TagList, error) {
 	req := &productpb.ListTagReq{
 		Page:     1,
 		PageSize: 100,
@@ -73,9 +94,9 @@ func (m *Product) Tag() ([]*product.Tag, error) {
 		return nil, fmt.Errorf("获取标签失败, err:%v", err)
 	}
 	
-	tagList := make([]*product.Tag, 0, res.Total)
+	tagList := make([]*product.TagList, 0, res.Total)
 	for k := range res.Tags {
-		tagList = append(tagList, &product.Tag{
+		tagList = append(tagList, &product.TagList{
 			Id:   res.Tags[k].TagId,
 			Name: res.Tags[k].Name,
 		})
