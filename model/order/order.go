@@ -24,6 +24,7 @@ type ShipmentOrderRes struct {
 type ListDetailOrderRes struct {
 	OrderId         uint64                            `json:"order_id"`
 	GrandTotal      float64                           `json:"grand_total"`
+	TotalQtyOrdered uint64                            `json:"total_qty_ordered"`
 	OrderStatus     orderpb.OrderStatus               `json:"order_status"`
 	OrderStatusName string                            `json:"order_status_name"`
 	OrderItems      []*orderpb.OrderDetail_OrderItems `json:"order_items"`

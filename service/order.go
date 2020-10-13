@@ -21,13 +21,13 @@ func NewOrder(o *gin.Context) *Order {
 
 func getOrderStatusName(status orderpb.OrderStatus) string {
 	orderStatusMap := make(map[orderpb.OrderStatus]string, 6)
-	
+
 	orderStatusMap[orderpb.OrderStatus_PendingPayment] = "待付款"
 	orderStatusMap[orderpb.OrderStatus_PendingShipment] = "待发货"
 	orderStatusMap[orderpb.OrderStatus_PendingReceiving] = "待收货"
 	orderStatusMap[orderpb.OrderStatus_PendingComment] = "已完成"
 	orderStatusMap[orderpb.OrderStatus_Completed] = "待评价"
-	
+
 	return orderStatusMap[status]
 }
 
@@ -50,12 +50,13 @@ func (o *Order) Index(param *orderpb.ListOrderReq) (list *order.ListOrderRes, er
 	listDetail := make([]*order.ListDetailOrderRes, 0, param.PageSize)
 	for i := range listRes.Orders {
 		listDetail = append(listDetail, &order.ListDetailOrderRes{
-			OrderId:     listRes.Orders[i].OrderId,
-			GrandTotal:  listRes.Orders[i].GrandTotal,
-			OrderStatus: listRes.Orders[i].OrderStatus,
+			OrderId:         listRes.Orders[i].OrderId,
+			GrandTotal:      listRes.Orders[i].GrandTotal,
+			TotalQtyOrdered: listRes.Orders[i].TotalQtyOrdered,
+			OrderStatus:     listRes.Orders[i].OrderStatus,
 			OrderStatusName: getOrderStatusName(listRes.Orders[i].OrderStatus),
-			OrderItems:  listRes.Orders[i].OrderItems,
-			CreatedAt:   listRes.Orders[i].CreatedAt,
+			OrderItems:      listRes.Orders[i].OrderItems,
+			CreatedAt:       listRes.Orders[i].CreatedAt,
 		})
 	}
 	list.Orders = listDetail
