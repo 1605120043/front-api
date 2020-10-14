@@ -13,6 +13,7 @@ var RequestRunStartTime time.Time
 const TIME_STD_FORMART = "2006-01-02 15:04:05"
 const TIME_STD_DATE_FORMART = "2006-01-02"
 const TIME_STD_NO_FORMART = "20060102150405"
+const TIME_STD_BASE_FORMAT = "2006-01-02T15:04:05Z07:00"
 
 // JSONTime format json time field by myself
 type JSONTime struct {

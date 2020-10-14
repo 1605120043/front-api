@@ -68,3 +68,16 @@ func (m *Common) MobileRegisterByPassword() (*service.MemberLoginRes, error) {
 	}
 	return service.NewCommon(m.Context).MobileRegisterByPassword()
 }
+
+func (m *Common) SendCodeByMobile() error {
+	mobile := m.PostForm("mobile")
+	sendType := m.DefaultPostForm("send_type", "login")
+	
+	m.validation.Required(mobile).Message("请输入手机号码！")
+	
+	if m.validation.HasError() {
+		return m.validation.GetError()
+	}
+	
+	return service.NewCommon(m.Context).SendCodeByMobile(mobile, sendType)
+}

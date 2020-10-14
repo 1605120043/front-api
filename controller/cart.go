@@ -14,44 +14,60 @@ func (m *Cart) Initialise() {
 
 // 单个商品加入购物车
 func (m *Cart) Add() {
-	err := cartFilter.Add()
+	str, err := cartFilter.Add()
 	if err != nil {
 		m.SetResponse(nil, err)
-		return
-	}
-	
-	m.SetResponse()
-}
-
-// 批量移除购物车商品
-func (m *Cart) Delete() {
-	err := cartFilter.Delete()
-	if err != nil {
-		m.SetResponse(nil, err)
-		return
-	}
-	
-	m.SetResponse()
-}
-
-// 获取购物车列表
-func (m *Cart) Index() {
-	str, err := cartFilter.Index()
-	if err != nil {
-		m.SetResponse(str, err)
 		return
 	}
 	
 	m.SetResponse(str)
 }
 
-// 批量选择或者取消购物车商品
-func (m *Cart) Checked() {
-	err := cartFilter.Checked()
+// 批量移除购物车商品
+func (m *Cart) Delete() {
+	str, err := cartFilter.Delete()
 	if err != nil {
 		m.SetResponse(nil, err)
 		return
 	}
 	
-	m.SetResponse()
+	m.SetResponse(str)
+}
+
+// 获取购物车列表
+func (m *Cart) Index() {
+	str, err := cartFilter.Index()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}
+
+// 获取购物车数量
+func (m *Cart) Count() {
+	total := cartFilter.Count()
+	m.SetResponse(total)
+}
+
+// 批量选择或者取消购物车商品
+func (m *Cart) Checked() {
+	str, err := cartFilter.Checked()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}
+
+func (m *Cart) Buy() {
+	str, err := cartFilter.Buy()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
 }

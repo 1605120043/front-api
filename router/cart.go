@@ -13,6 +13,8 @@ func init() {
 		g.Post("/add")
 		g.Post("/delete")
 		g.Get("/index")
+		g.Get("/count")
 		g.Post("/checked")
+		g.Post("/buy")
 	})
 }

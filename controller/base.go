@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 	
 	"goshop/front-api/pkg/core/ctl"
@@ -57,18 +58,25 @@ func (m *Base) SetResponse(params ...interface{}) {
 	lenBuf := len(params)
 	//如果没有传参数，data就设置空
 	if lenBuf == 0 {
-		data = struct{}{}
+		data = []struct{}{}
 	}
 	
 	//如果有一个，就把第一个设置到data中
 	if lenBuf > 0 {
 		if params[0] != nil {
-			data = params[0]
+			tyName := reflect.TypeOf(params[0]).Kind().String()
+			if tyName != "array" && tyName != "slice" {
+				d := make([]interface{}, 0, 1)
+				d = append(d, params[0])
+				data = d
+			} else {
+				data = params[0]
+			}
 		} else {
-			data = struct{}{}
+			data = []struct{}{}
 		}
 	} else {
-		data = struct{}{}
+		data = []struct{}{}
 	}
 	
 	if lenBuf > 1 {

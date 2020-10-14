@@ -15,7 +15,7 @@ func (m *Common) Initialise() {
 func (m *Common) GetAreaList() {
 	str, err := commonFilter.GetAreaList()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -23,9 +23,9 @@ func (m *Common) GetAreaList() {
 }
 
 func (m *Common) MobileLogin() {
-	str, err := commonFilter.MobileLoginByPassword()
+	str, err := commonFilter.MobileLoginByCode()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -35,9 +35,19 @@ func (m *Common) MobileLogin() {
 func (m *Common) MobileRegister() {
 	str, err := commonFilter.MobileRegisterByPassword()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
 	m.SetResponse(str)
+}
+
+func (m *Common) SendCode() {
+	err := commonFilter.SendCodeByMobile()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(nil)
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/shinmigo/pb/memberpb"
 	"github.com/shinmigo/pb/productpb"
 	"github.com/shopspring/decimal"
+	"goshop/front-api/model/cart"
 	"goshop/front-api/pkg/grpc/gclient"
 )
 
@@ -82,19 +83,7 @@ func (m *Cart) Add() error {
 	return nil
 }
 
-func (m *Cart) Delete() error {
-	isAll, _ := strconv.ParseInt(m.DefaultPostForm("is_all", "0"), 10, 8)
-	
-	cartIdList := make([]uint64, 0, 32)
-	if isAll == 0 { //根据id删除
-		cartIds := m.PostForm("cart_ids")
-		
-		if err := json.Unmarshal([]byte(cartIds), &cartIdList); err != nil {
-			return fmt.Errorf("请选择购物车商品, err: %v", err)
-		}
-	}
-	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
-	
+func (m *Cart) Delete(isAll int8, memberId uint64, cartIdList []uint64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	resp, err := gclient.CartClient.DelCart(ctx, &memberpb.DelCartReq{
 		IsAll:    int32(isAll),
@@ -113,7 +102,7 @@ func (m *Cart) Delete() error {
 	return nil
 }
 
-func (m *Cart) Index() (map[string]interface{}, error) {
+func (m *Cart) Index() (*cart.Carts, error) {
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	cartList, err := gclient.CartClient.GetCartListByMemberId(ctx, &memberpb.ListCartReq{MemberId: memberId})
@@ -157,69 +146,42 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 	}
 	
 	var (
-		amount           float64
-		productAmount    float64
-		orderPromotion   float64
-		productPromotion float64
-		couponPromotion  float64
-		promotionList    []string
-		costFreight      float64
-		weight           float64
+		amount    float64
+		promotion float64
 	)
 	delCartIds := make([]uint64, 0, 32)
-	list := make([]map[string]interface{}, 0, len(cartList.Carts))
+	cartProducts := make([]*cart.CartProducts, 0, len(cartList.Carts))
 	for k := range cartList.Carts {
 		if _, ok := ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId]; !ok {
 			delCartIds = append(delCartIds, cartList.Carts[k].CartId)
 			continue
 		}
+		specStruct := ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec
+		
+		// 商品总金额
+		productAmount, _ := decimal.NewFromFloat(specStruct.Price).Mul(decimal.NewFromFloat(float64(cartList.Carts[k].Nums))).Float64()
+		
 		var checked bool
 		if cartList.Carts[k].IsSelect == 1 {
 			checked = true
-		}
-		buf := map[string]interface{}{
-			"cart_id":         cartList.Carts[k].CartId,
-			"member_id":       cartList.Carts[k].MemberId,
-			"product_id":      cartList.Carts[k].ProductId,
-			"product_spec_id": cartList.Carts[k].ProductSpecId,
-			"nums":            cartList.Carts[k].Nums,
-			"checked":         checked,
-			//"product":         ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId],
-			"image":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Detail.Images[0],
-			"attr_val": ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Sku,
-			"title":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Detail.Name,
-			"stock":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Stock,
-			"price":    ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Price,
+			amount, _ = decimal.NewFromFloat(amount).Add(decimal.NewFromFloat(float64(productAmount))).Float64()
 		}
 		
-		//总金额
-		amount, _ = decimal.NewFromFloat(amount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.OldPrice)).Float64()
+		buf := &cart.CartProducts{
+			CartId:        cartList.Carts[k].CartId,
+			ProductId:     cartList.Carts[k].ProductId,
+			ProductSpecId: cartList.Carts[k].ProductSpecId,
+			Stock:         specStruct.Stock,
+			ProductName:   ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Detail.Name,
+			SpecName:      specStruct.Sku,
+			Image:         specStruct.Image,
+			Price:         specStruct.Price,
+			Num:           cartList.Carts[k].Nums,
+			Checked:       checked,
+			ProductAmount: productAmount,
+		}
+		cartProducts = append(cartProducts, buf)
 		
-		// 商品总金额
-		productAmount, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Price)).Float64()
-		
-		//订单促销金额
-		//商品促销金额
-		//优惠券优惠金额
-		//促销列表
-		//运费
-		
-		//商品总重
-		weight, _ = decimal.NewFromFloat(productAmount).Add(decimal.NewFromFloat(ProductSpecKeyByProductSpecId[cartList.Carts[k].ProductSpecId].Spec.Weight)).Float64()
-		
-		list = append(list, buf)
-	}
-	
-	cartMap := map[string]interface{}{
-		"amount":            amount,
-		"product_amount":    productAmount,
-		"order_promotion":   orderPromotion,
-		"product_promotion": productPromotion,
-		"coupon_promotion":  couponPromotion,
-		"promotion_list":    promotionList,
-		"cost_freight":      costFreight,
-		"weight":            weight, //商品总重
-		"carts":             list,
 	}
 	
 	if len(delCartIds) > 0 {
@@ -231,7 +193,26 @@ func (m *Cart) Index() (map[string]interface{}, error) {
 	}
 	cancel()
 	
-	return cartMap, nil
+	return &cart.Carts{
+		Amount:    amount,
+		Promotion: promotion,
+		Products:  cartProducts,
+	}, nil
+}
+
+func (m *Cart) Count() (total uint64) {
+	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
+	
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	resp, err := gclient.CartClient.GetCartCountByMemberId(ctx, &memberpb.ListCartReq{
+		MemberId: memberId,
+	})
+	cancel()
+	if err != nil {
+		return 0
+	}
+	total = resp.Count
+	return
 }
 
 func (m *Cart) Checked() error {
@@ -258,4 +239,102 @@ func (m *Cart) Checked() error {
 		return fmt.Errorf("操作失败")
 	}
 	return nil
+}
+
+//结算计算
+func (m *Cart) Buy(req []*cart.BuyReq) (*cart.BuyRes, error) {
+	productIds := make([]uint64, 0, len(req))
+	productSpecId := make([]uint64, 0, len(req))
+	reqMap := make(map[uint64]map[uint64]uint64, 0)
+	for k := range req {
+		if req[k].Num == 0 {
+			continue
+		}
+		productIds = append(productIds, req[k].ProductId)
+		productSpecId = append(productSpecId, req[k].ProductSpecId)
+		if _, ok := reqMap[req[k].ProductId]; ok {
+			reqMap[req[k].ProductId][req[k].ProductSpecId] = req[k].Num
+		} else {
+			buf := make(map[uint64]uint64)
+			buf[req[k].ProductSpecId] = req[k].Num
+			reqMap[req[k].ProductId] = buf
+		}
+	}
+	
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	res, err := gclient.ProductClient.GetProductListByProductSpecIds(ctx, &productpb.ProductSpecIdsReq{
+		ProductId:     productIds,
+		ProductSpecId: productSpecId,
+	})
+	cancel()
+	
+	if err != nil {
+		return nil, fmt.Errorf("获取商品失败, err:%v", err)
+	}
+	
+	if len(res.Products) == 0 {
+		return nil, fmt.Errorf("获取商品失败")
+	}
+	
+	buyProducts := make([]*cart.BuyProducts, 0, len(res.Products))
+	var (
+		orderAmount     float64
+		orderPromotion  float64
+		couponPromotion float64
+		orderWeight     float64
+		costFreight     float64
+	)
+	for k := range res.Products {
+		p := res.Products[k]
+		// 找不到规格跳过
+		if len(p.Spec) == 0 {
+			continue
+		}
+		
+		for s := range p.Spec {
+			num := reqMap[res.Products[k].ProductId][p.Spec[s].ProductSpecId]
+			//商品总重
+			productWeight, _ := decimal.NewFromFloat(p.Spec[s].Weight).Mul(decimal.NewFromFloat(float64(num))).Float64()
+			//商品总金额
+			productAmount, _ := decimal.NewFromFloat(p.Spec[s].Price).Mul(decimal.NewFromFloat(float64(num))).Float64()
+			
+			buf := &cart.BuyProducts{
+				ProductId:        p.ProductId,
+				ProductSpecId:    p.Spec[s].ProductSpecId,
+				Stock:            p.Spec[s].Stock,
+				ProductName:      p.Name,
+				SpecName:         p.Spec[s].Sku,
+				Image:            p.Spec[s].Image,
+				Price:            p.Spec[s].Price,
+				Num:              reqMap[res.Products[k].ProductId][p.Spec[s].ProductSpecId],
+				Weight:           p.Spec[s].Weight,
+				ProductWeight:    productWeight,
+				ProductAmount:    productAmount,
+				ProductPromotion: 0,
+			}
+			if p.Spec[s].Stock < reqMap[res.Products[k].ProductId][p.Spec[s].ProductSpecId] {
+				// 库存不足
+				buf.Error = fmt.Errorf("库存不足")
+				continue
+			}
+			buyProducts = append(buyProducts, buf)
+			
+			// 订单总金额
+			orderAmount, _ = decimal.NewFromFloat(orderAmount).Add(decimal.NewFromFloat(float64(productAmount))).Float64()
+			// 订单总重
+			orderWeight, _ = decimal.NewFromFloat(orderWeight).Add(decimal.NewFromFloat(float64(productWeight))).Float64()
+		}
+	}
+	
+	buyRes := &cart.BuyRes{
+		OrderAmount:     orderAmount,
+		OrderPromotion:  orderPromotion,
+		CouponPromotion: couponPromotion,
+		OrderWeight:     orderWeight,
+		CostFreight:     costFreight,
+		PromotionList:   []string{},
+		CouponList:      []string{},
+		Products:        buyProducts,
+	}
+	return buyRes, nil
 }

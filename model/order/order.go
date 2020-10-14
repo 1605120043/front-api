@@ -51,7 +51,6 @@ type DetailOrderRes struct {
 	UserNote       string                             `json:"user_note"`
 	OrderItems     []*orderpb.OrderDetail_OrderItems  `json:"order_items"`
 	OrderAddress   *orderpb.OrderDetail_OrderAddress  `json:"order_address"`
-	OrderPayment   *orderpb.OrderDetail_OrderPayment  `json:"order_payment"`
 	OrderShipment  *orderpb.OrderDetail_OrderShipment `json:"order_shipment"`
 	CreatedAt      string                             `json:"created_at"`
 }

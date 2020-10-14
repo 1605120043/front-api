@@ -15,31 +15,41 @@ func (m *Order) Initialise() {
 func (m *Order) Index() {
 	str, err := orderFilter.Index()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse(str)
 }
 
 func (m *Order) Info() {
 	info, err := orderFilter.Info()
 	if err != nil {
-		m.SetResponse(info, err)
+		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse(info)
 }
 
 func (m *Order) GetUserOrderStatusCount() {
 	list, err := orderFilter.GetUserOrderStatusCount()
 	if err != nil {
-		m.SetResponse(list, err)
+		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse(list)
+}
+
+func (m *Order) CreateOrder() {
+	str, err := orderFilter.CreateOrder()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
 }
 
 func (m *Order) CancelOrder() {
@@ -48,7 +58,7 @@ func (m *Order) CancelOrder() {
 		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse()
 }
 
@@ -58,6 +68,6 @@ func (m *Order) DeleteOrder() {
 		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse()
 }

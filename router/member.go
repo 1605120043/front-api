@@ -13,5 +13,7 @@ func init() {
 		g := routerhelper.NewGroupRouter("member", new(controller.Member), r, middleware.VerifyToken())
 		g.Get("/info")
 		g.Post("/update")
+		g.Get("/payment")
+		g.Post("/pay")
 	})
 }

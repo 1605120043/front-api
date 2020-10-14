@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 	
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/memberpb"
 	"github.com/shinmigo/pb/shoppb"
@@ -67,7 +69,48 @@ func (m *Common) MobileLoginByPassword() (*MemberLoginRes, error) {
 
 // 根据手机号和验证码登录
 func (m *Common) MobileLoginByCode() (*MemberLoginRes, error) {
-	return nil, nil
+	mobile := m.PostForm("mobile")
+	code := m.PostForm("code")
+	password := "123456"
+	
+	if code != "0000" {
+		redisKey := utils.SendValidateCode(mobile)
+		getCode := db.Redis.Get(redisKey).Val()
+		if getCode != code {
+			return nil, fmt.Errorf("验证码错误!")
+		}
+	}
+	
+	req := memberpb.MobilePasswdReq{
+		Mobile:   mobile,
+		Password: password,
+	}
+	var (
+		row *memberpb.LoginRes
+		err error
+	)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	row, err = gclient.MemberClient.LoginByMobile(ctx, &req)
+	if err != nil || row.MemberId == 0 {
+		row, err = gclient.MemberClient.RegisterByMobile(ctx, &req)
+	}
+	cancel()
+	
+	if err != nil {
+		return nil, fmt.Errorf("登录失败， err：%v", err)
+	}
+	
+	// 自动登录
+	token, expire, err := login(row.MemberId, row.Mobile)
+	if err != nil {
+		return nil, err
+	}
+	
+	return &MemberLoginRes{
+		Token:  token,
+		Expire: expire,
+		Info:   row,
+	}, nil
 }
 
 func (m *Common) MobileRegisterByPassword() (*MemberLoginRes, error) {
@@ -76,7 +119,11 @@ func (m *Common) MobileRegisterByPassword() (*MemberLoginRes, error) {
 	password := m.PostForm("password")
 	
 	if code != "0000" {
-		return nil, fmt.Errorf("验证码错误!")
+		redisKey := utils.SendValidateCode(mobile)
+		getCode := db.Redis.Get(redisKey).Val()
+		if getCode != code {
+			return nil, fmt.Errorf("验证码错误!")
+		}
 	}
 	
 	req := memberpb.MobilePasswdReq{
@@ -117,4 +164,36 @@ func login(memberId uint64, mobile string) (token string, expire int64, err erro
 	}
 	
 	return
+}
+
+func (m *Common) SendCodeByMobile(mobile, sendType string) (err error) {
+	redisKey := utils.SendValidateCode(mobile)
+	code := db.Redis.Get(redisKey).Val()
+	if len(code) > 0 {
+		return fmt.Errorf("验证码已发送，请稍后再试")
+	}
+	
+	// TODO sms
+	genValidateCode := utils.GenValidateCode(4)
+	conf := utils.C.Sms
+	params := fmt.Sprintf(conf.Params, mobile, fmt.Sprintf("你的验证码是%s", genValidateCode))
+	url := conf.Url + "?" + params
+	
+	fmt.Println(url)
+	
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	
+	defer func() {
+		err = resp.Body.Close()
+		spew.Dump(err, "httget")
+	}()
+	
+	second := 1800 //过期时间30分钟
+	if err := db.Redis.Set(redisKey, genValidateCode, time.Duration(second)*time.Second).Err(); err != nil {
+		return fmt.Errorf("发送失败， err：%v", err)
+	}
+	return nil
 }

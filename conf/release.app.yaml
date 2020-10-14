@@ -21,3 +21,22 @@ grpc:
     crm: project/member
     shop: project/shop
   host: xxx
+
+aliPay:
+  AppId: xxxx
+  NotifyUrl: www.xxxx.com/notify
+  EncryptKey:
+  IsProd: true
+  LocalTimeZone: PRC
+  SignType: RSA
+
+wxPay:
+  AppId: xxxx
+  MchId: xxx
+  NotifyUrl: www.xxx.com/notify
+  Md5key: xxxx
+  IsProd: true
+
+sms:
+  url:
+  params:

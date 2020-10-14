@@ -17,7 +17,7 @@ func (m *Category) Initialise() {
 func (m *Category) Index() {
 	str, err := categoryFilter.Index()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	

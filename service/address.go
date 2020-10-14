@@ -232,3 +232,19 @@ func (m *Address) Edit() error {
 	
 	return nil
 }
+
+// 编辑收货地址
+func (m *Address) Delete(addressId uint64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	resp, err := gclient.AddressClient.DelAddress(ctx, &basepb.DelReq{Id: addressId})
+	cancel()
+	if err != nil {
+		return fmt.Errorf("删除收货地址失败, err:%v", err)
+	}
+	
+	if resp.State == 0 {
+		return fmt.Errorf("删除失败")
+	}
+	
+	return nil
+}

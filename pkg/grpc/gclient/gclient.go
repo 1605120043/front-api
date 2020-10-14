@@ -29,6 +29,8 @@ var (
 	AreaClient            shoppb.AreaServiceClient
 	OrderClient           orderpb.OrderServiceClient
 	TagClient             productpb.TagServiceClient
+	MemberPaymentClient   memberpb.PaymentServiceClient
+	PaymentClient         shoppb.PaymentServiceClient
 )
 
 func DialGrpcService() {
@@ -49,6 +51,7 @@ func crm() {
 	CartClient = memberpb.NewCartServiceClient(conn)
 	AddressClient = memberpb.NewAddressServiceClient(conn)
 	MemberClient = memberpb.NewMemberServiceClient(conn)
+	MemberPaymentClient = memberpb.NewPaymentServiceClient(conn)
 }
 
 func pms() {
@@ -73,6 +76,7 @@ func shop() {
 	}
 	fmt.Printf("连接成功：%s, host分别为: %s \n", utils.C.Grpc.Name["shop"], strings.Join(utils.C.Etcd.Host, ","))
 	AreaClient = shoppb.NewAreaServiceClient(conn)
+	PaymentClient = shoppb.NewPaymentServiceClient(conn)
 }
 
 func oms() {

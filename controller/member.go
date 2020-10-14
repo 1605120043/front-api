@@ -1,6 +1,9 @@
 package controller
 
-import "goshop/front-api/filter"
+import (
+	"goshop/front-api/filter"
+	"goshop/front-api/pkg/utils"
+)
 
 var memberFilter *filter.Member
 
@@ -15,19 +18,32 @@ func (m *Member) Initialise() {
 func (m *Member) Info() {
 	str, err := memberFilter.Info()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse(str)
 }
 
 func (m *Member) Update() {
 	res, err := memberFilter.Update()
 	if err != nil {
-		m.SetResponse(res, err)
+		m.SetResponse(nil, err)
 		return
 	}
-
+	
 	m.SetResponse(res)
+}
+
+func (m *Member) Payment() {
+	m.SetResponse(utils.Payments.Payment)
+}
+
+func (m *Member) Pay() {
+	str, err := memberFilter.Pay()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	m.SetResponse(str)
 }

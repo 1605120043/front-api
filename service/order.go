@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+	
+	"github.com/shinmigo/pb/basepb"
 	"goshop/front-api/model/order"
 	"goshop/front-api/pkg/grpc/gclient"
-	"time"
-
+	
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/orderpb"
 )
@@ -22,13 +24,13 @@ func NewOrder(o *gin.Context) *Order {
 
 func getOrderStatusName(status orderpb.OrderStatus) string {
 	orderStatusMap := make(map[orderpb.OrderStatus]string, 6)
-
+	
 	orderStatusMap[orderpb.OrderStatus_PendingPayment] = "待付款"
 	orderStatusMap[orderpb.OrderStatus_PendingShipment] = "待发货"
 	orderStatusMap[orderpb.OrderStatus_PendingReceiving] = "待收货"
 	orderStatusMap[orderpb.OrderStatus_PendingComment] = "已完成"
 	orderStatusMap[orderpb.OrderStatus_Completed] = "待评价"
-
+	
 	return orderStatusMap[status]
 }
 
@@ -46,7 +48,7 @@ func (o *Order) Index(param *orderpb.ListOrderReq) (list *order.ListOrderRes, er
 	if listRes.Total == 0 {
 		return
 	}
-
+	
 	list.Total = listRes.Total
 	listDetail := make([]*order.ListDetailOrderRes, 0, param.PageSize)
 	for i := range listRes.Orders {
@@ -61,7 +63,7 @@ func (o *Order) Index(param *orderpb.ListOrderReq) (list *order.ListOrderRes, er
 		})
 	}
 	list.Orders = listDetail
-
+	
 	return
 }
 
@@ -78,12 +80,12 @@ func (o *Order) Info(userId, orderId uint64) (info *order.DetailOrderRes, err er
 	if err != nil {
 		return nil, fmt.Errorf("获取订单信息失败， err：%v", err)
 	}
-
+	
 	if listRes == nil {
-		return nil, nil
+		return nil, fmt.Errorf("获取订单信息失败")
 	}
 	if listRes.Total == 0 {
-		return nil, nil
+		return nil, fmt.Errorf("获取订单信息失败")
 	}
 	info = &order.DetailOrderRes{
 		OrderId:        listRes.Orders[0].OrderId,
@@ -105,11 +107,10 @@ func (o *Order) Info(userId, orderId uint64) (info *order.DetailOrderRes, err er
 		UserNote:      listRes.Orders[0].UserNote,
 		OrderItems:    listRes.Orders[0].OrderItems,
 		OrderAddress:  listRes.Orders[0].OrderAddress,
-		OrderPayment:  listRes.Orders[0].OrderPayment,
 		OrderShipment: listRes.Orders[0].OrderShipment,
 		CreatedAt:     listRes.Orders[0].CreatedAt,
 	}
-
+	
 	return
 }
 
@@ -117,7 +118,7 @@ func (o *Order) GetUserOrderStatusCount(userId uint64) (orderStatusCountList []*
 	req := &orderpb.GetOrderStatusReq{
 		MemberId: userId,
 	}
-
+	
 	orderStatusCountList = make([]*order.UserOrderStatusCountRes, 0, 16)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	info, err := gclient.OrderClient.GetOrderStatus(ctx, req)
@@ -134,17 +135,39 @@ func (o *Order) GetUserOrderStatusCount(userId uint64) (orderStatusCountList []*
 			Count:       info.OrderStatistics[i].Count,
 		})
 	}
-
+	
 	return
 }
 
-func (o *Order) CancelOrder(orderId uint64, memberId uint64, storeId uint64) error {
+func (o *Order) CreateOrder(memberId, addressId uint64, node string, products []*orderpb.Order_Products) (*basepb.AnyRes, error) {
+	req := orderpb.Order{
+		MemberId:    memberId,
+		AddressId:   addressId,
+		UserNode:    node,
+		Products:    products,
+	}
+	
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	res, err := gclient.OrderClient.AddOrder(ctx, &req)
+	cancel()
+	
+	if err != nil {
+		return nil, err
+	}
+	if res == nil || res.Id == 0 {
+		return nil, errors.New("订单创建失败！")
+	}
+	
+	return res, nil
+}
+
+func (o *Order) CancelOrder(orderId, memberId, storeId uint64) error {
 	req := orderpb.CancelOrderReq{
 		MemberId: memberId,
 		OrderId:  []uint64{orderId},
 		StoreId:  storeId,
 	}
-
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	res, err := gclient.OrderClient.CancelOrder(ctx, &req)
 	cancel()
@@ -154,17 +177,17 @@ func (o *Order) CancelOrder(orderId uint64, memberId uint64, storeId uint64) err
 	if res == nil || res.Id == 0 {
 		return errors.New("取消订单失败！")
 	}
-
+	
 	return nil
 }
 
-func (o *Order) DeleteOrder(orderId uint64, memberId uint64, storeId uint64) error {
+func (o *Order) DeleteOrder(orderId, memberId, storeId uint64) error {
 	req := orderpb.DeleteOrderReq{
 		MemberId: memberId,
 		OrderId:  []uint64{orderId},
 		StoreId:  storeId,
 	}
-
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	res, err := gclient.OrderClient.DeleteOrder(ctx, &req)
 	cancel()
@@ -174,6 +197,6 @@ func (o *Order) DeleteOrder(orderId uint64, memberId uint64, storeId uint64) err
 	if res == nil || res.Id == 0 {
 		return errors.New("删除订单失败！")
 	}
-
+	
 	return nil
 }

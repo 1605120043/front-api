@@ -17,7 +17,7 @@ func (m *Product) Initialise() {
 func (m *Product) Index() {
 	str, err := productFilter.Index()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -27,7 +27,7 @@ func (m *Product) Index() {
 func (m *Product) Detail() {
 	str, err := productFilter.Detail()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -38,7 +38,7 @@ func (m *Product) Detail() {
 func (m *Product) Tag() {
 	str, err := productFilter.Tag()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	

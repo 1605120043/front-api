@@ -34,7 +34,8 @@ require (
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.3.0 // indirect
-	github.com/shinmigo/pb v0.0.0-20200928022856-ec51c94da789
+	github.com/shinmigo/gopay v0.0.0-20201016060329-051c6b4a1ebd
+	github.com/shinmigo/pb v0.0.0-20201019023724-a717f52f5e4a
 	github.com/shopspring/decimal v1.2.0
 	github.com/spf13/afero v1.3.1 // indirect
 	github.com/spf13/cast v1.3.1 // indirect

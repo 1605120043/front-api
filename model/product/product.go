@@ -14,8 +14,9 @@ type TagList struct {
 }
 
 type ProductList struct {
-	ProductId uint64  `json:"product_id"`
-	Name      string  `json:"name"`
-	Image     string  `json:"image"`
-	Price     float64 `json:"price"`
+	ProductId        uint64  `json:"product_id"`
+	Name             string  `json:"name"`
+	Image            string  `json:"image"`
+	Price            float64 `json:"price"`
+	ShortDescription string  `json:"short_description"`
 }

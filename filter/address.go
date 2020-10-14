@@ -2,6 +2,7 @@ package filter
 
 import (
 	"regexp"
+	"strconv"
 	
 	"github.com/gin-gonic/gin"
 	"goshop/front-api/model/address"
@@ -106,6 +107,24 @@ func (m *Address) Edit() error {
 	}
 	
 	if err := service.NewAddress(m.Context).Edit(); err != nil {
+		return err
+	}
+	
+	return nil
+}
+
+// 删除收货地址
+func (m *Address) Delete() error {
+	addressId := m.PostForm("address_id")
+	
+	m.validation.Numeric(addressId).Message("参数错误！")
+	
+	if m.validation.HasError() {
+		return m.validation.GetError()
+	}
+	
+	addressIdNumber, _ := strconv.ParseUint(addressId, 10, 64)
+	if err := service.NewAddress(m.Context).Delete(addressIdNumber); err != nil {
 		return err
 	}
 	

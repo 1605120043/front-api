@@ -40,9 +40,6 @@ func (m *Product) Index() ([]*product.ProductList, error) {
 	if listRes == nil {
 		return list, fmt.Errorf("获取商品失败")
 	}
-	if listRes.Total == 0 {
-		return list, fmt.Errorf("获取商品失败")
-	}
 	
 	for k := range listRes.Products {
 		var image string
@@ -51,10 +48,11 @@ func (m *Product) Index() ([]*product.ProductList, error) {
 		}
 		
 		list = append(list, &product.ProductList{
-			ProductId: listRes.Products[k].ProductId,
-			Name:      listRes.Products[k].Name,
-			Image:     image,
-			Price:     listRes.Products[k].Price,
+			ProductId:        listRes.Products[k].ProductId,
+			Name:             listRes.Products[k].Name,
+			Image:            image,
+			Price:            listRes.Products[k].Price,
+			ShortDescription: listRes.Products[k].ShortDescription,
 		})
 	}
 	return list, err

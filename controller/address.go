@@ -15,7 +15,7 @@ func (m *Address) Initialise() {
 func (m *Address) Index() {
 	str, err := addressFilter.Index()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -25,7 +25,7 @@ func (m *Address) Index() {
 func (m *Address) Detail() {
 	str, err := addressFilter.Detail()
 	if err != nil {
-		m.SetResponse(str, err)
+		m.SetResponse(nil, err)
 		return
 	}
 	
@@ -44,6 +44,16 @@ func (m *Address) Add() {
 
 func (m *Address) Edit() {
 	err := addressFilter.Edit()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse()
+}
+
+func (m *Address) Delete() {
+	err := addressFilter.Delete()
 	if err != nil {
 		m.SetResponse(nil, err)
 		return

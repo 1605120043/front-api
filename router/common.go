@@ -12,5 +12,6 @@ func init() {
 		g.Get("/get-area-list")
 		g.Post("/mobile-login")
 		g.Post("/mobile-register")
+		g.Post("/send-code")
 	})
 }
