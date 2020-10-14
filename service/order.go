@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"goshop/front-api/model/order"
 	"goshop/front-api/pkg/grpc/gclient"
@@ -135,4 +136,44 @@ func (o *Order) GetUserOrderStatusCount(userId uint64) (orderStatusCountList []*
 	}
 
 	return
+}
+
+func (o *Order) CancelOrder(orderId uint64, memberId uint64, storeId uint64) error {
+	req := orderpb.CancelOrderReq{
+		MemberId: memberId,
+		OrderId:  []uint64{orderId},
+		StoreId:  storeId,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	res, err := gclient.OrderClient.CancelOrder(ctx, &req)
+	cancel()
+	if err != nil {
+		return err
+	}
+	if res == nil || res.Id == 0 {
+		return errors.New("取消订单失败！")
+	}
+
+	return nil
+}
+
+func (o *Order) DeleteOrder(orderId uint64, memberId uint64, storeId uint64) error {
+	req := orderpb.DeleteOrderReq{
+		MemberId: memberId,
+		OrderId:  []uint64{orderId},
+		StoreId:  storeId,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	res, err := gclient.OrderClient.DeleteOrder(ctx, &req)
+	cancel()
+	if err != nil {
+		return err
+	}
+	if res == nil || res.Id == 0 {
+		return errors.New("删除订单失败！")
+	}
+
+	return nil
 }

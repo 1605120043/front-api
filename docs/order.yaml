@@ -55,3 +55,39 @@
         description: 成功
         schema:
           $ref: '#/definitions/resp'
+
+/order/cancel-order:
+  post:
+    summary: 删除订单
+    description: 删除订单
+    tags:
+      - 订单
+    parameters:
+      - name: order_id
+        in: formData
+        description: 订单id
+        required: true
+        type: string
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'
+
+/order/delete-order:
+  post:
+    summary: 删除订单
+    description: 删除订单
+    tags:
+      - 订单
+    parameters:
+      - name: order_id
+        in: formData
+        description: 订单id
+        required: true
+        type: string
+    responses:
+      200:
+        description: 成功
+        schema:
+          $ref: '#/definitions/resp'

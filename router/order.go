@@ -14,5 +14,7 @@ func init() {
 		g.Get("/index")
 		g.Get("/info")
 		g.Get("/get-user-order-status-count", "GetUserOrderStatusCount")
+		g.Post("/cancel-order", "CancelOrder")
+		g.Post("/delete-order", "DeleteOrder")
 	})
 }

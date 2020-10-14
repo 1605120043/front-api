@@ -41,3 +41,23 @@ func (m *Order) GetUserOrderStatusCount() {
 
 	m.SetResponse(list)
 }
+
+func (m *Order) CancelOrder() {
+	err := orderFilter.CancelOrder()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+
+	m.SetResponse()
+}
+
+func (m *Order) DeleteOrder() {
+	err := orderFilter.DeleteOrder()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+
+	m.SetResponse()
+}

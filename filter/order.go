@@ -68,3 +68,55 @@ func (m *Order) GetUserOrderStatusCount() (list []*order.UserOrderStatusCountRes
 	list, err = service.NewOrder(m.Context).GetUserOrderStatusCount(memberId)
 	return
 }
+
+func (m *Order) CancelOrder() (err error) {
+	orderId := m.PostForm("order_id")
+	storeId := m.PostForm("store_id")
+	storeIdLen := len(storeId)
+
+	valid := validation.Validation{}
+	valid.Required(orderId).Message("请选择订单！")
+	valid.Match(orderId, regexp.MustCompile(`^[1-9][0-9]*$`)).Message("订单信息错误！")
+	if storeIdLen > 0 {
+		valid.Match(storeId, regexp.MustCompile(`^[1-9][0-9]*$`)).Message("门店信息错误！")
+	}
+	if valid.HasError() {
+		return valid.GetError()
+	}
+
+	var storeIdNum uint64
+	orderIdNum, _ := strconv.ParseUint(orderId, 10, 64)
+	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
+	if storeIdLen > 0 {
+		storeIdNum, _ = strconv.ParseUint(storeId, 10, 64)
+	}
+
+	err = service.NewOrder(m.Context).CancelOrder(orderIdNum, memberId, storeIdNum)
+	return
+}
+
+func (m *Order) DeleteOrder() (err error) {
+	orderId := m.PostForm("order_id")
+	storeId := m.PostForm("store_id")
+	storeIdLen := len(storeId)
+
+	valid := validation.Validation{}
+	valid.Required(orderId).Message("请选择订单！")
+	valid.Match(orderId, regexp.MustCompile(`^[1-9][0-9]*$`)).Message("订单信息错误！")
+	if storeIdLen > 0 {
+		valid.Match(storeId, regexp.MustCompile(`^[1-9][0-9]*$`)).Message("门店信息错误！")
+	}
+	if valid.HasError() {
+		return valid.GetError()
+	}
+
+	var storeIdNum uint64
+	orderIdNum, _ := strconv.ParseUint(orderId, 10, 64)
+	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
+	if storeIdLen > 0 {
+		storeIdNum, _ = strconv.ParseUint(storeId, 10, 64)
+	}
+
+	err = service.NewOrder(m.Context).DeleteOrder(orderIdNum, memberId, storeIdNum)
+	return
+}

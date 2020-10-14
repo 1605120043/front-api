@@ -454,7 +454,10 @@
         "summary": "获取用户订单状态统计",
         "responses": {
           "200": {
-            "description": "成功"
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
           }
         }
       }
@@ -518,6 +521,55 @@
             "schema": {
               "$ref": "#/definitions/resp"
             }
+          }
+        }
+      }
+    },
+    "/order/cancel-order": {
+      "post": {
+        "description": "删除订单",
+        "tags": [
+          "订单"
+        ],
+        "summary": "删除订单",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "订单id",
+            "name": "order_id",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/resp"
+            }
+          }
+        }
+      }
+    },
+    "/order/delete-order": {
+      "post": {
+        "description": "删除订单",
+        "tags": [
+          "订单"
+        ],
+        "summary": "删除订单",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "订单id",
+            "name": "order_id",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
           }
         }
       }
