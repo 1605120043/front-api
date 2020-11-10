@@ -25,9 +25,11 @@ func (m *Product) Index() ([]*product.ProductList, error) {
 	tagId, _ := strconv.ParseUint(m.DefaultQuery("tag_id", "0"), 10, 64)
 	page, _ := strconv.ParseUint(m.DefaultQuery("page", "1"), 10, 64)
 	pageSize, _ := strconv.ParseUint(m.DefaultQuery("page_size", "20"), 10, 64)
+	name := m.DefaultPostForm("name", "")
 	req := &productpb.ListProductReq{
 		CategoryId: categoryId,
 		TagId:      tagId,
+		Name:       name,
 		Page:       page,
 		PageSize:   pageSize,
 	}
