@@ -70,6 +70,7 @@
 |:----- |:-------|:-----|----- |
 |category_id  |false |int|分类id |
 |tag_id  |false |int |标签id|
+|name  |false |string |商品名称|
 |page  |false |int |页码，默认1|
 |page_size  |false |int |条数，默认20|
 
