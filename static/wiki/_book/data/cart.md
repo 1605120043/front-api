@@ -276,6 +276,7 @@
 
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|pay_amount | float | 实付金额 |
 |order_amount | float | 订单金额 |
 |order_promotion | float | 订单优惠 |
 |coupon_promotion | float | 优惠券优惠 |

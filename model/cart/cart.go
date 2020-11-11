@@ -51,5 +51,6 @@ type BuyRes struct {
 	CouponList      []string       `json:"coupon_list"`      //优惠券列
 	OrderWeight     float64        `json:"order_weight"`     // 订单总重
 	CostFreight     float64        `json:"cost_freight"`     //运费
+	PayAmount       float64        `json:"pay_amount"`       // 实付
 	Products        []*BuyProducts `json:"products"`
 }

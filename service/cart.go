@@ -283,6 +283,7 @@ func (m *Cart) Buy(req []*cart.BuyReq) (*cart.BuyRes, error) {
 		couponPromotion float64
 		orderWeight     float64
 		costFreight     float64
+		payAmount       float64
 	)
 	for k := range res.Products {
 		p := res.Products[k]
@@ -326,6 +327,9 @@ func (m *Cart) Buy(req []*cart.BuyReq) (*cart.BuyRes, error) {
 		}
 	}
 	
+	// 实付金额 = 商品金额加上运费金额减去优惠金额
+	payAmount, _ = decimal.NewFromFloat(orderAmount).Add(decimal.NewFromFloat(float64(costFreight))).Float64()
+	
 	buyRes := &cart.BuyRes{
 		OrderAmount:     orderAmount,
 		OrderPromotion:  orderPromotion,
@@ -335,6 +339,7 @@ func (m *Cart) Buy(req []*cart.BuyReq) (*cart.BuyRes, error) {
 		PromotionList:   []string{},
 		CouponList:      []string{},
 		Products:        buyProducts,
+		PayAmount:       payAmount,
 	}
 	return buyRes, nil
 }
