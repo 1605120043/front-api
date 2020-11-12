@@ -88,7 +88,7 @@
 |code_city_name | string |市名称 |
 |code_coun_name | string |区名称 |
 |address | string |收货地址 |
-|room_number | string |门牌号或楼号 |
+|room_number | string |门牌号或楼号,暂无 |
 |is_default | bool |是否默认 |
 
 #### 接口示例
