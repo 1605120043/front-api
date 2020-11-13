@@ -29,6 +29,7 @@
 
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|count | int | 购物车数量， 商品选中+1 |
 |amount | float | 商品金额 |
 |promotion | float | 优惠金额 |
 |cart_id | int | 购物车编号 |
@@ -48,7 +49,7 @@
 {
     "run_time": 0.821,
     "code": 1,
-    "message": "",
+    "message": "加入成功",
     "data": [{
         "amount": 0,
         "promotion": 0,
@@ -97,6 +98,7 @@
 
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|count | int | 购物车数量， 商品选中+1 |
 |amount | float | 商品金额 |
 |promotion | float | 优惠金额 |
 |cart_id | int | 购物车编号 |
@@ -116,7 +118,7 @@
 {
     "run_time": 0.113,
     "code": 1,
-    "message": "",
+    "message": "删除成功",
     "data": [{
         "amount": 0,
         "promotion": 0,
@@ -145,6 +147,7 @@
 
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|count | int | 购物车数量， 商品选中+1 |
 |amount | float | 商品金额 |
 |promotion | float | 优惠金额 |
 |cart_id | int | 购物车编号 |
@@ -210,6 +213,7 @@
 
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|count | int | 购物车数量， 商品选中+1 |
 |amount | float | 商品金额 |
 |promotion | float | 优惠金额 |
 |cart_id | int | 购物车编号 |
@@ -229,7 +233,7 @@
 {
     "run_time": 0.821,
     "code": 1,
-    "message": "",
+    "message": "成功",
     "data": [{
         "amount": 0,
         "promotion": 0,

@@ -148,6 +148,7 @@ func (m *Cart) Index() (*cart.Carts, error) {
 	var (
 		amount    float64
 		promotion float64
+		count     uint64
 	)
 	delCartIds := make([]uint64, 0, 32)
 	cartProducts := make([]*cart.CartProducts, 0, len(cartList.Carts))
@@ -167,6 +168,10 @@ func (m *Cart) Index() (*cart.Carts, error) {
 			amount, _ = decimal.NewFromFloat(amount).Add(decimal.NewFromFloat(float64(productAmount))).Float64()
 		}
 		
+		//member_id = ? and is_select = 1
+		if checked {
+			count = count + 1
+		}
 		buf := &cart.CartProducts{
 			CartId:        cartList.Carts[k].CartId,
 			ProductId:     cartList.Carts[k].ProductId,
@@ -181,7 +186,6 @@ func (m *Cart) Index() (*cart.Carts, error) {
 			ProductAmount: productAmount,
 		}
 		cartProducts = append(cartProducts, buf)
-		
 	}
 	
 	if len(delCartIds) > 0 {
@@ -194,6 +198,7 @@ func (m *Cart) Index() (*cart.Carts, error) {
 	cancel()
 	
 	return &cart.Carts{
+		Count:     count,
 		Amount:    amount,
 		Promotion: promotion,
 		Products:  cartProducts,

@@ -15,6 +15,7 @@ type CartProducts struct {
 }
 
 type Carts struct {
+	Count     uint64          `json:"count"`     //购物车数量
 	Amount    float64         `json:"amount"`    //总金额
 	Promotion float64         `json:"promotion"` //促销金额
 	Products  []*CartProducts `json:"products"`
