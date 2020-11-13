@@ -20,7 +20,7 @@ func (m *Cart) Add() {
 		return
 	}
 	
-	m.SetResponse(str)
+	m.SetResponse(str, "加入成功", 1)
 }
 
 // 批量移除购物车商品
@@ -31,7 +31,7 @@ func (m *Cart) Delete() {
 		return
 	}
 	
-	m.SetResponse(str)
+	m.SetResponse(str, "删除成功", 1)
 }
 
 // 获取购物车列表
@@ -59,7 +59,7 @@ func (m *Cart) Checked() {
 		return
 	}
 	
-	m.SetResponse(str)
+	m.SetResponse(str, "成功", 1)
 }
 
 func (m *Cart) Buy() {
