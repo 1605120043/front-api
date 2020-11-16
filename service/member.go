@@ -33,13 +33,6 @@ func (m *Member) Info() (*memberpb.LoginRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("获取失败， err：%v", err)
 	}
-	loc, _ := time.LoadLocation("Asia/Shanghai")
-	birthdayTime, err := time.ParseInLocation(utils.TIME_STD_BASE_FORMAT, row.Birthday, loc)
-	if err != nil {
-		return nil, fmt.Errorf("获取失败， err：%v", err)
-	}
-	row.Birthday = birthdayTime.Format(utils.TIME_STD_DATE_FORMART)
-
 	return row, nil
 }
 

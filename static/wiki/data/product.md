@@ -300,7 +300,7 @@
         {
             "id": 98,
             "pid": 0,
-            "name": "中山一米",
+            "name": "中山goshop",
             "icon": "2F9a504fc2d56285352d7d584290ef76c6a7ef6330",
             "sort": 2
         }
