@@ -13,5 +13,6 @@ func init() {
 		g.Post("/mobile-login")
 		g.Post("/mobile-register")
 		g.Post("/send-code")
+		g.Post("/wx-login")
 	})
 }

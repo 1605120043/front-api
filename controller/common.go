@@ -32,16 +32,6 @@ func (m *Common) MobileLogin() {
 	m.SetResponse(str)
 }
 
-func (m *Common) MobileRegister() {
-	str, err := commonFilter.MobileRegisterByPassword()
-	if err != nil {
-		m.SetResponse(nil, err)
-		return
-	}
-	
-	m.SetResponse(str)
-}
-
 func (m *Common) SendCode() {
 	err := commonFilter.SendCodeByMobile()
 	if err != nil {
@@ -50,4 +40,14 @@ func (m *Common) SendCode() {
 	}
 	
 	m.SetResponse(nil)
+}
+
+func (m *Common) WxLogin() {
+	str, err := commonFilter.MemberLoginByWXApp()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
 }

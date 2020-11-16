@@ -21,6 +21,7 @@ type Config struct {
 	*Etcd
 	*Grpc
 	*Sms
+	*WxApp
 }
 
 type Base struct {
@@ -81,4 +82,9 @@ type WxPayConfig struct {
 type Sms struct {
 	Url    string
 	Params string
+}
+
+type WxApp struct {
+	WxAppID     string
+	WxAppSecret string
 }

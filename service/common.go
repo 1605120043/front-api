@@ -38,40 +38,10 @@ func (m *Common) GetAreaList() (*shoppb.ListAreaRes, error) {
 	return list, nil
 }
 
-// 根据手机号和密码登录
-func (m *Common) MobileLoginByPassword() (*MemberLoginRes, error) {
-	mobile := m.PostForm("mobile")
-	password := m.PostForm("password")
-	
-	req := memberpb.MobilePasswdReq{
-		Mobile:   mobile,
-		Password: password,
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	row, err := gclient.MemberClient.LoginByMobile(ctx, &req)
-	cancel()
-	
-	if err != nil {
-		return nil, fmt.Errorf("登录失败， err：%v", err)
-	}
-	
-	token, expire, err := login(row.MemberId, row.Mobile)
-	if err != nil {
-		return nil, err
-	}
-	
-	return &MemberLoginRes{
-		Token:  token,
-		Expire: expire,
-		Info:   row,
-	}, nil
-}
-
 // 根据手机号和验证码登录
 func (m *Common) MobileLoginByCode() (*MemberLoginRes, error) {
 	mobile := m.PostForm("mobile")
 	code := m.PostForm("code")
-	password := "123456"
 	
 	if code != "0000" {
 		redisKey := utils.SendValidateCode(mobile)
@@ -81,9 +51,8 @@ func (m *Common) MobileLoginByCode() (*MemberLoginRes, error) {
 		}
 	}
 	
-	req := memberpb.MobilePasswdReq{
-		Mobile:   mobile,
-		Password: password,
+	req := memberpb.MobileReq{
+		Mobile: mobile,
 	}
 	var (
 		row *memberpb.LoginRes
@@ -98,44 +67,6 @@ func (m *Common) MobileLoginByCode() (*MemberLoginRes, error) {
 	
 	if err != nil {
 		return nil, fmt.Errorf("登录失败， err：%v", err)
-	}
-	
-	// 自动登录
-	token, expire, err := login(row.MemberId, row.Mobile)
-	if err != nil {
-		return nil, err
-	}
-	
-	return &MemberLoginRes{
-		Token:  token,
-		Expire: expire,
-		Info:   row,
-	}, nil
-}
-
-func (m *Common) MobileRegisterByPassword() (*MemberLoginRes, error) {
-	mobile := m.PostForm("mobile")
-	code := m.PostForm("code")
-	password := m.PostForm("password")
-	
-	if code != "0000" {
-		redisKey := utils.SendValidateCode(mobile)
-		getCode := db.Redis.Get(redisKey).Val()
-		if getCode != code {
-			return nil, fmt.Errorf("验证码错误!")
-		}
-	}
-	
-	req := memberpb.MobilePasswdReq{
-		Mobile:   mobile,
-		Password: password,
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	row, err := gclient.MemberClient.RegisterByMobile(ctx, &req)
-	cancel()
-	
-	if err != nil {
-		return nil, fmt.Errorf("注册失败， err：%v", err)
 	}
 	
 	// 自动登录
@@ -196,4 +127,53 @@ func (m *Common) SendCodeByMobile(mobile, sendType string) (err error) {
 		return fmt.Errorf("发送失败， err：%v", err)
 	}
 	return nil
+}
+
+func (m *Common) MemberLoginByWXApp(code, encryptedData, iv string) (*MemberLoginRes, string) {
+	res, err := GetAccessTokenServer(code)
+	if err != nil {
+		return nil, err.Error()
+	}
+	
+	if len(res.SessionKey) == 0 {
+		return nil, res.WxErrInfo.ErrMsg
+	}
+	
+	// 解析手机号
+	wpn, err := GetPhoneNumber(res.SessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err.Error()
+	}
+	
+	wxInfo, err := GetWxUserInfo(res.SessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err.Error()
+	}
+	
+	req := memberpb.LoginThirdReq{
+		Mobile:     wpn.PhoneNumber,
+		Type:       1,
+		OpenId:     wxInfo.OpenId,
+		SessionKey: res.SessionKey,
+		Unionid:    wxInfo.UnionId,
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	row, err := gclient.MemberClient.LoginByThird(ctx, &req)
+	cancel()
+	
+	if err != nil {
+		return nil, err.Error()
+	}
+	
+	// 自动登录
+	token, expire, err := login(row.MemberId, row.Mobile)
+	if err != nil {
+		return nil, err.Error()
+	}
+	
+	return &MemberLoginRes{
+		Token:  token,
+		Expire: expire,
+		Info:   row,
+	}, ""
 }
