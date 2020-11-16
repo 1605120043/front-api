@@ -131,7 +131,74 @@
 }
 ```
 
-### 3. <a id="mobile-code">发送验证码</a>
+### 3. <a id="wx-login">微信授权登录</a>
+
+#### 接口功能
+
+> 微信小程序授权登录
+
+#### URL
+
+> common/wx-login
+
+#### HTTP请求方式
+
+> POST
+
+#### 请求参数
+
+|参数|必选|类型|说明|
+|:----- |:-------|:-----|----- |
+|code  |ture |string| |
+|encryptedData  |true |string ||
+|iv"  |true |string ||
+
+#### 返回字段
+|返回字段|字段类型|说明 |
+|:----- |:------|:----------------------------- |
+|token | string |登录token |
+|expire | int | 过期时间 |
+|member_id | int |用户id |
+|nickname | string |用户昵称 |
+|mobile | string |手机号码 |
+|name | string |姓名 |
+|gender | int |性别 0未知, 1女 2男 |
+|id_card | string |身份证 |
+|birthday | string |出生年月 |
+|avatar | string |头像 |
+|email | string |邮箱 |
+|member_level_id | int |会员等级ID |
+|point | int |积分 |
+|balance | float |余额，小数点2位 |
+
+#### 接口示例
+```
+{
+    "run_time": 0.141,
+    "code": 1,
+    "message": "",
+    "data": [{
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNiwibW9iaWxlIjoiMTg2MjE1MjA2MDUiLCJleHAiOjE2MDMzMzgzNTYsImlhdCI6MTYwMzI1MTk1NiwiaXNzIjoiMTg2MjE1MjA2MDUifQ.mGTR_FH8CBmJmkexx4UHE9c9cY1FfHrEDjDIRr5Yf88",
+        "expire": 1603338356,
+        "info": {
+            "member_id": 16,
+            "nickname": "shrimp",
+            "mobile": "18621520605",
+            "name": "",
+            "gender": 0,
+            "id_card": "",
+            "birthday": "0001-01-01T00:00:00Z",
+            "avatar": "",
+            "email": "",
+            "member_level_id": 0,
+            "point": 0,
+            "balance": 0
+        }
+    }]
+}
+```
+
+### 4. <a id="mobile-code">发送验证码</a>
 
 #### 接口功能
 

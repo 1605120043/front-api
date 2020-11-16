@@ -6,6 +6,7 @@
     * [用户协议](http://10.32.5.88:8199/static/user_agreement.html)
     * [隐私协议](http://10.32.5.88:8199/static/privacy_agreement.html)
     * [省市区](data/common.md#get-area-list)
+    * [微信授权登录](data/common.md#wx-login)
     * [手机号码登录](data/common.md#mobile-login)
     * [发送验证码](data/common.md#mobile-code)
     
