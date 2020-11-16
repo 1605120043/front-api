@@ -4,9 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
-	
+
 	"github.com/davecgh/go-spew/spew"
 	alipayKernel "github.com/shinmigo/gopay/alipay/kernel"
 	wxpayKernel "github.com/shinmigo/gopay/wxpay/kernel"
@@ -38,7 +37,8 @@ func GetPaymentListGrpc() {
 		Status: shoppb.PaymentStatus_Open,
 	})
 	if err != nil {
-		log.Fatal("获取支付方式失败， err：%v", err)
+		//log.Fatal("获取支付方式失败， err：%v", err)
+		fmt.Printf("获取支付方式失败，支付服务没有开启，请检查，err：%v", err)
 		return
 	}
 	cancel()
