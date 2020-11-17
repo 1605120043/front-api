@@ -32,6 +32,7 @@ var (
 	MemberPaymentClient   memberpb.PaymentServiceClient
 	PaymentClient         shoppb.PaymentServiceClient
 	ImageClient           shoppb.ImageSeviceClient
+	BannerAdClient        shoppb.BannerAdServiceClient
 )
 
 func DialGrpcService() {
@@ -78,6 +79,7 @@ func shop() {
 	fmt.Printf("连接成功：%s, host分别为: %s \n", utils.C.Grpc.Name["shop"], strings.Join(utils.C.Etcd.Host, ","))
 	AreaClient = shoppb.NewAreaServiceClient(conn)
 	PaymentClient = shoppb.NewPaymentServiceClient(conn)
+	BannerAdClient = shoppb.NewBannerAdServiceClient(conn)
 	ImageClient = shoppb.NewImageSeviceClient(conn)
 }
 

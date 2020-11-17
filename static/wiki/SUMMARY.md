@@ -44,3 +44,6 @@
     * [创建订单](data/order.md#create-order)
     * [取消订单](data/order.md#cancel-order)
     * [删除订单](data/order.md#delete-order)
+    
+* [轮播、广告位](data/banner.md)
+    * [轮播、广告位列表](data/banner.md#index)
