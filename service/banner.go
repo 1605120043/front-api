@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"goshop/front-api/model/banner"
 	"goshop/front-api/pkg/grpc/gclient"
-	"goshop/front-api/pkg/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -36,13 +34,10 @@ func (m *BannerAd) Index(param *shoppb.ListBannerAdReq) (bannerAdList *banner.Ba
 	}
 
 	for k := range list.BannerAds {
-		imageUrl := fmt.Sprintf("http://10.32.5.88:%s/image/get-image?name=%s", utils.C.Webhost, list.BannerAds[k].ImageUrl)
 		listInfo := &banner.BannerDetail{
-			Id:          list.BannerAds[k].Id,
-			ImageUrl:    imageUrl,
-			RedirectUrl: list.BannerAds[k].RedirectUrl,
-			Sort:        list.BannerAds[k].Sort,
-			TagName:     list.BannerAds[k].TagName,
+			Id:      list.BannerAds[k].Id,
+			EleInfo: list.BannerAds[k].EleInfo,
+			TagName: list.BannerAds[k].TagName,
 		}
 
 		switch list.BannerAds[k].EleType {

@@ -24,15 +24,17 @@
 |:----- |:------|:----------------------------- |
 |banner | array |轮播图数据 |
 |--id | int | 编号 |
-|--image_url | string |轮播图图片地址 |
-|--redirect_url | string |轮播图跳转地址 |
-|--sort | int |排序 |
+|--ele_info | json |轮播信息 |
+|---image_url | string |图片地址 |
+|---redirect_url | string |跳转地址 |
+|---sort | int |排序 |
 |--tag_name | string |标识名 |
 |ad | array |广告位数据 |
 |--id | int |编号 |
-|--image_url | string |广告位图片地址 |
-|--redirect_url | string |广告位跳转地址 |
-|--sort | int |排序 |
+|--ele_info | json |广告位信息 |
+|---image_url | string |图片地址 |
+|---redirect_url | string |跳转地址 |
+|---sort | int |排序 |
 |--tag_name | string |标识名 |
 
 #### 接口示例
@@ -44,17 +46,13 @@
 	"data": [{
 		"banner": [{
 			"id": 2,
-			"image_url": "sdfdsfdsa.jpg",
-			"redirect_url": "http://fsdefasfsdf.jpg",
-			"sort": 1,
-            "tag_name": "product"
+            "ele_info": "[{\"image_url\":\"fasdfsd.jpg\",\"redirect_url\":\"http://www.baidu.com\",\"sort\":0}]",
+            "tag_name": "home"
 		}],
 		"ad": [{
 			"id": 3,
-			"image_url": "sdfdsfdsfadfdsa.jpg",
-			"redirect_url": "http://fsdefasfsdf.jpg",
-			"sort": 1,
-            "tag_name": "ads"
+            "ele_info": "[{\"image_url\":\"fasdfsd.jpg\",\"redirect_url\":\"http://www.baidu.com\",\"sort\":0}]",
+            "tag_name": "home"
 		}]
 	}]
 }
