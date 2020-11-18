@@ -3,10 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"time"
 	
-	"github.com/davecgh/go-spew/spew"
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/memberpb"
 	"github.com/shinmigo/pb/shoppb"
@@ -107,20 +106,23 @@ func (m *Common) SendCodeByMobile(mobile, sendType string) (err error) {
 	// TODO sms
 	genValidateCode := utils.GenValidateCode(4)
 	conf := utils.C.Sms
-	params := fmt.Sprintf(conf.Params, mobile, fmt.Sprintf("你的验证码是%s", genValidateCode))
-	url := conf.Url + "?" + params
 	
-	fmt.Println(url)
-	
-	resp, err := http.Get(url)
+	client, err := dysmsapi.NewClientWithAccessKey("cn-hangzhou", conf.AccessKeyId, conf.AccessSecret)
 	if err != nil {
 		return err
 	}
+	request := dysmsapi.CreateSendSmsRequest()
+	request.Scheme = "https"
+	request.PhoneNumbers = mobile
+	request.SignName = conf.SignName
+	request.TemplateCode = conf.TemplateCode
+	request.TemplateParam = fmt.Sprintf("{\"code\":\"%s\"}", genValidateCode)
 	
-	defer func() {
-		err = resp.Body.Close()
-		spew.Dump(err, "httget")
-	}()
+	response, err := client.SendSms(request)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("response is %#v\n", response)
 	
 	second := 1800 //过期时间30分钟
 	if err := db.Redis.Set(redisKey, genValidateCode, time.Duration(second)*time.Second).Err(); err != nil {

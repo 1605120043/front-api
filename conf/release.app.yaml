@@ -38,8 +38,10 @@ wxPay:
   IsProd: true
 
 sms:
-  url:
-  params:
+  accessKeyId:
+  accessSecret:
+  signName:
+  templateCode:
 
 wxapp:
   AppId:

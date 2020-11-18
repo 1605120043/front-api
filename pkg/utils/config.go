@@ -80,8 +80,10 @@ type WxPayConfig struct {
 }
 
 type Sms struct {
-	Url    string
-	Params string
+	AccessKeyId  string `xml:"accessKeyId"`
+	AccessSecret string `xml:"accessSecret"`
+	SignName     string `xml:"signName"`
+	TemplateCode string `xml:"template_code"`
 }
 
 type WxApp struct {
