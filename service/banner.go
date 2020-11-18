@@ -42,6 +42,7 @@ func (m *BannerAd) Index(param *shoppb.ListBannerAdReq) (bannerAdList *banner.Ba
 			ImageUrl:    imageUrl,
 			RedirectUrl: list.BannerAds[k].RedirectUrl,
 			Sort:        list.BannerAds[k].Sort,
+			TagName:     list.BannerAds[k].TagName,
 		}
 
 		switch list.BannerAds[k].EleType {

@@ -27,11 +27,13 @@
 |--image_url | string |轮播图图片地址 |
 |--redirect_url | string |轮播图跳转地址 |
 |--sort | int |排序 |
+|--tag_name | string |标识名 |
 |ad | array |广告位数据 |
 |--id | int |编号 |
 |--image_url | string |广告位图片地址 |
 |--redirect_url | string |广告位跳转地址 |
 |--sort | int |排序 |
+|--tag_name | string |标识名 |
 
 #### 接口示例
 ```json
@@ -44,13 +46,15 @@
 			"id": 2,
 			"image_url": "sdfdsfdsa.jpg",
 			"redirect_url": "http://fsdefasfsdf.jpg",
-			"sort": 1
+			"sort": 1,
+            "tag_name": "product"
 		}],
 		"ad": [{
 			"id": 3,
 			"image_url": "sdfdsfdsfadfdsa.jpg",
 			"redirect_url": "http://fsdefasfsdf.jpg",
-			"sort": 1
+			"sort": 1,
+            "tag_name": "ads"
 		}]
 	}]
 }
