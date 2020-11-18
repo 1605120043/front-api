@@ -22,7 +22,7 @@ func (m *BannerAd) Index() (*banner.BannerAd, error) {
 		PageSize: 1000,
 		Id:       0,
 		EleType:  0,
-		Status:   shoppb.BannerAdStatus_Enabled,
+		Status:   shoppb.BannerAdStatus_BannerEnabled,
 	}
 	return service.NewBannerAd(m.Context).Index(req)
 }
