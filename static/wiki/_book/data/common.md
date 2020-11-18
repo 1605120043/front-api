@@ -131,6 +131,7 @@
 }
 ```
 
+
 ### 3. <a id="wx-login">微信授权登录</a>
 
 #### 接口功能
@@ -149,9 +150,9 @@
 
 |参数|必选|类型|说明|
 |:----- |:-------|:-----|----- |
-|code  |ture |string| |
+|openid  |ture |string| 通过get-wx-openid获取 |
 |encryptedData  |true |string ||
-|iv"  |true |string ||
+|iv  |true |string ||
 
 #### 返回字段
 |返回字段|字段类型|说明 |
@@ -198,7 +199,41 @@
 }
 ```
 
-### 4. <a id="mobile-code">发送验证码</a>
+### 4. <a id="get-wx-openid">获取openid</a>
+
+#### 接口功能
+
+> 微信小程序， 根据code获取获取openid
+
+#### URL
+
+> common/get-wx-openid
+
+#### HTTP请求方式
+
+> POST
+
+#### 请求参数
+
+|参数|必选|类型|说明|
+|:----- |:-------|:-----|----- |
+|code  |ture |string| |
+
+#### 返回字段
+|返回字段|字段类型|说明 |
+|:----- |:------|:----------------------------- |
+
+#### 接口示例
+```
+{
+    "run_time": 0.141,
+    "code": 1,
+    "message": "",
+    "data": ["oQykT5UEKuX65BSDPKIjvT3sht1s"]
+}
+```
+
+### 5. <a id="mobile-code">发送验证码</a>
 
 #### 接口功能
 

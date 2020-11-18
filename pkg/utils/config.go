@@ -85,6 +85,6 @@ type Sms struct {
 }
 
 type WxApp struct {
-	WxAppID     string
-	WxAppSecret string
+	AppID     string
+	AppSecret string
 }

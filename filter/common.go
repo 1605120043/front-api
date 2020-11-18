@@ -1,8 +1,6 @@
 package filter
 
 import (
-	"fmt"
-	
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/shoppb"
 	"goshop/front-api/pkg/validation"
@@ -51,22 +49,33 @@ func (m *Common) SendCodeByMobile() error {
 	return service.NewCommon(m.Context).SendCodeByMobile(mobile, sendType)
 }
 
-func (m *Common) MemberLoginByWXApp() (*service.MemberLoginRes, error) {
-	code := m.GetString("code")
-	encryptedData := m.GetString("encryptedData")
-	iv := m.GetString("iv")
-	
+func (m *Common) GetWxOpenid() (map[string]string, error) {
+	code := m.PostForm("code")
 	m.validation.Required(code).Message("检查参数code")
+	if m.validation.HasError() {
+		return nil, m.validation.GetError()
+	}
+	
+	openid, err := service.NewCommon(m.Context).GetWxOpenid(code)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]string{
+		"openid": openid,
+	}, nil
+}
+
+func (m *Common) BindMobileForOpenId() (*service.MemberLoginRes, error) {
+	openid := m.PostForm("openid")
+	encryptedData := m.PostForm("encryptedData")
+	iv := m.PostForm("iv")
+	
+	m.validation.Required(openid).Message("检查参数openid")
 	m.validation.Required(encryptedData).Message("检查参数encryptedData")
 	m.validation.Required(iv).Message("检查参数iv")
 	
 	if m.validation.HasError() {
 		return nil, m.validation.GetError()
 	}
-	row, err := service.NewCommon(m.Context).MemberLoginByWXApp(code, encryptedData, iv)
-	if len(err) > 0 {
-		return row, fmt.Errorf(err)
-	}
-	
-	return row, nil
+	return service.NewCommon(m.Context).BindMobileForOpenId(openid, encryptedData, iv)
 }

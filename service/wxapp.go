@@ -11,8 +11,8 @@ import (
 func GetAccessTokenServer(code string) (wxSessionInfo wxapp.WxSessionInfo, err error) {
 	url := fmt.Sprintf(
 		"https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
-		utils.C.WxAppID,
-		utils.C.WxAppSecret,
+		utils.C.WxApp.AppID,
+		utils.C.WxApp.AppSecret,
 		code,
 	)
 	

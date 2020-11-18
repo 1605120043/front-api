@@ -11,8 +11,8 @@ func init() {
 		g := routerhelper.NewGroupRouter("common", new(controller.Common), r)
 		g.Get("/get-area-list")
 		g.Post("/mobile-login")
-		g.Post("/mobile-register")
 		g.Post("/send-code")
+		g.Post("/get-wx-openid")
 		g.Post("/wx-login")
 	})
 }

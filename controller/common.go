@@ -42,8 +42,18 @@ func (m *Common) SendCode() {
 	m.SetResponse(nil)
 }
 
+func (m *Common) GetWxOpenid() {
+	str, err := commonFilter.GetWxOpenid()
+	if err != nil {
+		m.SetResponse(nil, err)
+		return
+	}
+	
+	m.SetResponse(str)
+}
+
 func (m *Common) WxLogin() {
-	str, err := commonFilter.MemberLoginByWXApp()
+	str, err := commonFilter.BindMobileForOpenId()
 	if err != nil {
 		m.SetResponse(nil, err)
 		return

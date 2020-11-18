@@ -129,51 +129,67 @@ func (m *Common) SendCodeByMobile(mobile, sendType string) (err error) {
 	return nil
 }
 
-func (m *Common) MemberLoginByWXApp(code, encryptedData, iv string) (*MemberLoginRes, string) {
+func (m *Common) GetWxOpenid(code string) (string, error) {
 	res, err := GetAccessTokenServer(code)
 	if err != nil {
-		return nil, err.Error()
+		return "", err
 	}
 	
-	if len(res.SessionKey) == 0 {
-		return nil, res.WxErrInfo.ErrMsg
-	}
-	
-	// 解析手机号
-	wpn, err := GetPhoneNumber(res.SessionKey, encryptedData, iv)
-	if err != nil {
-		return nil, err.Error()
-	}
-	
-	wxInfo, err := GetWxUserInfo(res.SessionKey, encryptedData, iv)
-	if err != nil {
-		return nil, err.Error()
-	}
-	
-	req := memberpb.LoginThirdReq{
-		Mobile:     wpn.PhoneNumber,
-		Type:       1,
-		OpenId:     wxInfo.OpenId,
+	req := memberpb.SessionKey{
+		OpenId:     res.Openid,
 		SessionKey: res.SessionKey,
-		Unionid:    wxInfo.UnionId,
+		Unionid:    res.Unionid,
 	}
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	row, err := gclient.MemberClient.LoginByThird(ctx, &req)
+	row, err := gclient.MemberClient.SaveSessionKey(ctx, &req)
 	cancel()
 	
 	if err != nil {
-		return nil, err.Error()
+		return "", err
+	}
+	
+	return row.OpenId, nil
+}
+
+func (m *Common) BindMobileForOpenId(openid, encryptedData, iv string) (*MemberLoginRes, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	row, err := gclient.MemberClient.SaveSessionKey(ctx, &memberpb.SessionKey{
+		OpenId: openid,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(row.SessionKey) == 0 {
+		return nil, fmt.Errorf("找不到sessionkey")
+	}
+	
+	// 解析手机号
+	wpn, err := GetPhoneNumber(row.SessionKey, encryptedData, iv)
+	if err != nil {
+		return nil, err
+	}
+	
+	req := memberpb.BindMobileReq{
+		Mobile: wpn.PhoneNumber,
+		OpenId: openid,
+	}
+	info, err := gclient.MemberClient.BindMobileForOpenId(ctx, &req)
+	cancel()
+	
+	if err != nil {
+		return nil, err
 	}
 	
 	// 自动登录
-	token, expire, err := login(row.MemberId, row.Mobile)
+	token, expire, err := login(info.MemberId, info.Mobile)
 	if err != nil {
-		return nil, err.Error()
+		return nil, err
 	}
 	
 	return &MemberLoginRes{
 		Token:  token,
 		Expire: expire,
-		Info:   row,
-	}, ""
+		Info:   info,
+	}, nil
 }

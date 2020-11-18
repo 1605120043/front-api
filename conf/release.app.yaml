@@ -40,3 +40,7 @@ wxPay:
 sms:
   url:
   params:
+
+wxapp:
+  AppId:
+  AppSecret:
