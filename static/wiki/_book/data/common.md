@@ -151,8 +151,8 @@
 |参数|必选|类型|说明|
 |:----- |:-------|:-----|----- |
 |openid  |ture |string| 通过get-wx-openid获取 |
-|encryptedData  |true |string ||
-|iv  |true |string ||
+|encryptedData  |true |string |小程序获取|
+|iv  |true |string |小程序获取|
 
 #### 返回字段
 |返回字段|字段类型|说明 |
@@ -203,7 +203,7 @@
 
 #### 接口功能
 
-> 微信小程序， 根据code获取获取openid
+> 根据微信小程序code获取openid
 
 #### URL
 
@@ -222,6 +222,7 @@
 #### 返回字段
 |返回字段|字段类型|说明 |
 |:----- |:------|:----------------------------- |
+|openid | string |根据code获取的 |
 
 #### 接口示例
 ```
@@ -229,7 +230,7 @@
     "run_time": 0.141,
     "code": 1,
     "message": "",
-    "data": ["oQykT5UEKuX65BSDPKIjvT3sht1s"]
+    "data": [{"open_id": "oQykT5UEKuX65BSDPKIjvT3sht1s"}]
 }
 ```
 
