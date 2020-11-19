@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"goshop/front-api/model/banner"
 	"goshop/front-api/pkg/grpc/gclient"
 	"time"
@@ -33,10 +35,28 @@ func (m *BannerAd) Index(param *shoppb.ListBannerAdReq) (bannerAdList *banner.Ba
 		return bannerAdList, nil
 	}
 
+	var httpInfo string
+	if m.Request.TLS == nil {
+		httpInfo = "http://"
+	} else {
+		httpInfo = "https://"
+	}
+	eleInfoList := make([]*banner.EleInfo, 0, 8)
 	for k := range list.BannerAds {
+		if list.BannerAds[k].EleInfo == "" {
+			continue
+		}
+		errs := json.Unmarshal([]byte(list.BannerAds[k].EleInfo), &eleInfoList)
+		if errs != nil {
+			continue
+		}
+		for i := range eleInfoList {
+			eleInfoList[i].ImageUrl = fmt.Sprintf("%s/image/get-image?name=%s", httpInfo+m.Request.Host, eleInfoList[i].ImageUrl)
+		}
+
 		listInfo := &banner.BannerDetail{
 			Id:      list.BannerAds[k].Id,
-			EleInfo: list.BannerAds[k].EleInfo,
+			EleInfo: eleInfoList,
 			TagName: list.BannerAds[k].TagName,
 		}
 

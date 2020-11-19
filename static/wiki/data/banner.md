@@ -40,19 +40,51 @@
 #### 接口示例
 ```json
 {
-	"run_time": 0.0140086,
+	"run_time": 0.0089998,
 	"code": 1,
 	"message": "",
 	"data": [{
 		"banner": [{
+			"id": 5,
+			"ele_info": [{
+				"image_url": "62e3943ecba913333d5144b839ff5e64.png",
+				"redirect_url": "www.geng.com",
+				"sort": 2
+			}, {
+				"image_url": "47dcff59681d3597d6da3ea5911efc3b.jpeg",
+				"redirect_url": "www.baidu.com",
+				"sort": 1
+			}],
+			"tag_name": "dog2"
+		}, {
 			"id": 2,
-            "ele_info": "[{\"image_url\":\"fasdfsd.jpg\",\"redirect_url\":\"http://www.baidu.com\",\"sort\":0}]",
-            "tag_name": "home"
+			"ele_info": [{
+				"image_url": "62e3943ecba913333d5144b839ff5e64.png",
+				"redirect_url": "www.geng.com",
+				"sort": 2
+			}, {
+				"image_url": "47dcff59681d3597d6da3ea5911efc3b.jpeg",
+				"redirect_url": "www.baidu.com",
+				"sort": 1
+			}],
+			"tag_name": "home"
 		}],
 		"ad": [{
+			"id": 6,
+			"ele_info": [{
+				"image_url": "62e3943ecba913333d5144b839ff5e64.png",
+				"redirect_url": "www.geng.com",
+				"sort": 2
+			}],
+			"tag_name": "dddd2"
+		}, {
 			"id": 3,
-            "ele_info": "[{\"image_url\":\"fasdfsd.jpg\",\"redirect_url\":\"http://www.baidu.com\",\"sort\":0}]",
-            "tag_name": "home"
+			"ele_info": [{
+				"image_url": "62e3943ecba913333d5144b839ff5e64.png",
+				"redirect_url": "www.geng.com",
+				"sort": 2
+			}],
+			"tag_name": "RRRd"
 		}]
 	}]
 }
