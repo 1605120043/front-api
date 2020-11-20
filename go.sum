@@ -451,6 +451,8 @@ github.com/shinmigo/pb v0.0.0-20201116100203-d391cd932401 h1:pBEOsqtW04z1geSVkRC
 github.com/shinmigo/pb v0.0.0-20201116100203-d391cd932401/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
 github.com/shinmigo/pb v0.0.0-20201118060118-df18fb67c1cb h1:fJVKdXmKKwzskg5BzxM1fFMv/Vs8Onv0pRiit28JmZw=
 github.com/shinmigo/pb v0.0.0-20201118060118-df18fb67c1cb/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
+github.com/shinmigo/pb v0.0.0-20201118085358-ffd3b6ea57e1 h1:gfBJsGfPFPnPKahS+auZWKLSXd/ln1H6BBEmpsmR1HI=
+github.com/shinmigo/pb v0.0.0-20201118085358-ffd3b6ea57e1/go.mod h1:sE6q+pYXPmwYntosms0U/zV12SDdDiOhJTFyJRl4bTE=
 github.com/shopspring/decimal v1.2.0 h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
