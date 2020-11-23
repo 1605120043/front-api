@@ -85,8 +85,8 @@ func alipay(params string) {
 	
 	aliPayClient, err := alipayKernel.NewAliPayClient(&alipayKernel.Config{
 		AppId:                  aliPayConf.AppId,
-		AliPayPublicKeyPath:    "./pkg/cert/ali/rsa_ali_public_key.pem",
-		MerchantPrivateKeyPath: "./pkg/cert/ali/rsa_private_key.pem",
+		AliPayPublicKeyPath:    "./pkg/cert/ali/apiclient_cert.pem",
+		MerchantPrivateKeyPath: "./pkg/cert/ali/apiclient_key.pem",
 		NotifyUrl:              aliPayConf.NotifyUrl,
 		EncryptKey:             aliPayConf.EncryptKey,
 		IsProd:                 aliPayConf.IsProd,
