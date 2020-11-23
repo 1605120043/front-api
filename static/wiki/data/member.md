@@ -156,9 +156,20 @@
 |payment_code  |true |string |支付方式|
 |trade_type  |true |string |支付形式， 支付宝：WAP；...|
 
-#### 返回字段
+#### 微信返回字段
+|返回字段|字段类型|说明 |
+|:----- |:------|:----------------------------- |
+|appid | string |小程序appid |
+|partnerid | string |商户号id |
+|prepayid | string |预支付交易会话标识 |
+|noncestr | string |随机字符串 |
+|package | string |签名字段 |
+|timestamp | string |时间戳 |
+|signType | string |加密方式 |
+|paySign | string |签名 |
+
 
 #### 接口示例
 ```
-待定
+
 ```
