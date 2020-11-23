@@ -21,7 +21,7 @@ func WechatPay(paymentId, tradeType string, money float64) (map[string]string, e
 		OutTradeNo: paymentId,
 		TotalFee:   uint64(totalFee),
 		TradeType:  tradeType,
-		NotifyUrl:  "www.xxx.com/notify",
+		NotifyUrl:  "https://goshop.shinmigo.com/pay/notify",
 	})
 	if err != nil {
 		return nil, err
@@ -36,6 +36,8 @@ func WechatPay(paymentId, tradeType string, money float64) (map[string]string, e
 		"noncestr":  payRes.NonceStr,
 		"package":   "Sign=WXPay",
 		"timestamp": time_stamp,
+		"signType":  "md5",
+		"paySign":   payRes.Sign,
 	}
 	
 	return prePayParams, nil
