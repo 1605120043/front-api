@@ -67,8 +67,18 @@ func (m *Member) Pay(memberId, orderId uint64, paymentCode, tradeType string) (m
 	if !isOpen {
 		return nil, fmt.Errorf("未开启该支付方式")
 	}
-
+	
+	var openid string
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	if tradeType == "JSAPI" {
+		// 获取用openid
+		memberThird, err := gclient.MemberClient.GetMemberOpenid(ctx, &memberpb.MemberIdReq{MemberId: memberId})
+		if err != nil {
+			return nil, fmt.Errorf("获取openid失败， err：%v", err)
+		}
+		openid = memberThird.OpenId
+	}
+	
 	orderRes, err := gclient.OrderClient.GetOrderList(ctx, &orderpb.ListOrderReq{
 		Page:     1,
 		PageSize: 1,
@@ -129,7 +139,7 @@ func (m *Member) Pay(memberId, orderId uint64, paymentCode, tradeType string) (m
 
 	// 打开支付
 	if memberpb.PaymentCode(paymentCodeVal) == memberpb.PaymentCode_Wechat {
-		return WechatPay(res.PaymentId, tradeType, money)
+		return WechatPay(res.PaymentId, tradeType, money, openid)
 	}
 
 	if memberpb.PaymentCode(paymentCodeVal) == memberpb.PaymentCode_Alipay {

@@ -1,14 +1,18 @@
 package filter
 
 import (
+	"encoding/xml"
 	"errors"
+	"io/ioutil"
+	"log"
 	"regexp"
 	"strconv"
 	"unicode/utf8"
-
+	
+	"goshop/front-api/model/wxapp"
 	"goshop/front-api/pkg/validation"
 	"goshop/front-api/service"
-
+	
 	"github.com/gin-gonic/gin"
 	"github.com/shinmigo/pb/memberpb"
 )
@@ -32,7 +36,7 @@ func (m *Member) Update() (bool, error) {
 	gender := m.PostForm("gender")
 	birthday := m.PostForm("birthday")
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
-
+	
 	valid := validation.Validation{}
 	//valid.Required(avatar).Message("请上传头像信息！")
 	//valid.Match(avatar, regexp.MustCompile(`^[a-zA-z0-9,\-\.]+$`)).Message("头像格式错误")
@@ -53,7 +57,7 @@ func (m *Member) Update() (bool, error) {
 	}
 	genderNum, _ := strconv.ParseUint(gender, 10, 64)
 	genderType := memberpb.MemberGender(genderNum)
-
+	
 	req := &memberpb.Member{
 		MemberId: memberId,
 		Nickname: nickname,
@@ -68,17 +72,32 @@ func (m *Member) Pay() (map[string]string, error) {
 	orderId := m.PostForm("order_id")
 	paymentCode := m.PostForm("payment_code")
 	tradeType := m.PostForm("trade_type")
-
+	
 	m.validation.Required(orderId).Message("订单编号错误！")
 	m.validation.Required(paymentCode).Message("请选择支付方式！")
 	m.validation.Required(tradeType).Message("参数出错！")
-
+	
 	if m.validation.HasError() {
 		return nil, m.validation.GetError()
 	}
-
+	
 	memberId, _ := strconv.ParseUint(m.GetString("goshop_member_id"), 10, 64)
 	orderIdNum, _ := strconv.ParseUint(orderId, 10, 64)
-
+	
 	return service.NewMember(m.Context).Pay(memberId, orderIdNum, paymentCode, tradeType)
+}
+
+func (m *Member) WxNotify() (wxn wxapp.WXPayNotify, err error) {
+	var body []byte
+	body, err = ioutil.ReadAll(m.Request.Body)
+	if err != nil {
+		return
+	}
+	
+	log.Println(string(body))
+	err = xml.Unmarshal(body, &wxn)
+	if err != nil {
+		return
+	}
+	return
 }
