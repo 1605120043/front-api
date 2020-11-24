@@ -3,7 +3,7 @@ module goshop/front-api
 go 1.14
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.659 // indirect
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.659
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.18+incompatible
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -38,7 +38,7 @@ require (
 	github.com/shinmigo/gopay v0.0.0-20201016060329-051c6b4a1ebd
 	github.com/shinmigo/pb v0.0.0-20201118085358-ffd3b6ea57e1
 	github.com/shopspring/decimal v1.2.0
-	github.com/spf13/afero v1.3.1 // indirect
+	github.com/spf13/afero v1.3.1
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
