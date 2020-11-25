@@ -98,3 +98,5 @@ func AliPay(paymentId, tradeType string, money float64) (map[string]string, erro
 	}
 	return nil, nil
 }
+
+

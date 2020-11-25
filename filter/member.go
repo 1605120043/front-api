@@ -87,17 +87,19 @@ func (m *Member) Pay() (map[string]string, error) {
 	return service.NewMember(m.Context).Pay(memberId, orderIdNum, paymentCode, tradeType)
 }
 
-func (m *Member) WxNotify() (wxn wxapp.WXPayNotify, err error) {
-	var body []byte
-	body, err = ioutil.ReadAll(m.Request.Body)
+func (m *Member) WxNotify() error {
+	body, err := ioutil.ReadAll(m.Request.Body)
 	if err != nil {
-		return
+		return err
 	}
 	
 	log.Println(string(body))
+	
+	var wxn wxapp.WXPayNotify
 	err = xml.Unmarshal(body, &wxn)
 	if err != nil {
-		return
+		return err
 	}
-	return
+	
+	return service.NewMember(m.Context).WxNotify(wxn)
 }

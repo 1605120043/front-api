@@ -49,10 +49,9 @@ func (m *Member) Pay() {
 }
 
 func (m *Member) Notify() {
-	str, err := memberFilter.WxNotify()
-	if err != nil {
+	if err := memberFilter.WxNotify(); err != nil {
 		m.SetResponse(nil, err)
 		return
 	}
-	m.SetResponse(str)
+	m.SetResponse()
 }
