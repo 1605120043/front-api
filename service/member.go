@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 	
+	wxPayment "github.com/shinmigo/gopay/wxpay/payment"
 	"github.com/shopspring/decimal"
-	"goshop/front-api/model/wxapp"
 	"goshop/front-api/pkg/grpc/gclient"
 	"goshop/front-api/pkg/utils"
 	
@@ -151,7 +151,7 @@ func (m *Member) Pay(memberId, orderId uint64, paymentCode, tradeType string) (m
 	return nil, nil
 }
 
-func (m *Member) WxNotify(wxn wxapp.WXPayNotify) error {
+func (m *Member) WxNotify(wxn *wxPayment.NotifyRes) error {
 	if wxn.ReturnCode != "SUCCESS" { // return_code 表示通信状态，不代表支付状态
 		return fmt.Errorf("通信失败，请稍后再通知我")
 	}
@@ -177,7 +177,7 @@ func (m *Member) WxNotify(wxn wxapp.WXPayNotify) error {
 		PaymentCode: 1,
 		Money:       money,
 		PayedMsg:    statusMsg,
-		TradeNo:     wxn.OutTradeNo,
+		TradeNo:     wxn.TransactionId,
 	})
 	
 	if err != nil {

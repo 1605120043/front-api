@@ -1,7 +1,6 @@
 package filter
 
 import (
-	"encoding/xml"
 	"errors"
 	"io/ioutil"
 	"log"
@@ -9,7 +8,8 @@ import (
 	"strconv"
 	"unicode/utf8"
 	
-	"goshop/front-api/model/wxapp"
+	wxPayment "github.com/shinmigo/gopay/wxpay/payment"
+	"goshop/front-api/pkg/utils"
 	"goshop/front-api/pkg/validation"
 	"goshop/front-api/service"
 	
@@ -88,6 +88,7 @@ func (m *Member) Pay() (map[string]string, error) {
 }
 
 func (m *Member) WxNotify() error {
+	wxPaymentClient := wxPayment.Payment{Client: utils.WxPayClient}
 	body, err := ioutil.ReadAll(m.Request.Body)
 	if err != nil {
 		return err
@@ -95,8 +96,7 @@ func (m *Member) WxNotify() error {
 	
 	log.Println(string(body))
 	
-	var wxn wxapp.WXPayNotify
-	err = xml.Unmarshal(body, &wxn)
+	wxn, err := wxPaymentClient.NotifyVerify(body)
 	if err != nil {
 		return err
 	}
