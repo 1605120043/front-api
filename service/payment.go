@@ -1,9 +1,8 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
-	"strconv"
-	"time"
 	
 	"github.com/davecgh/go-spew/spew"
 	aliPayment "github.com/shinmigo/gopay/alipay/payment"
@@ -32,20 +31,19 @@ func WechatPay(paymentId, tradeType string, money float64, openid string) (map[s
 		return nil, err
 	}
 	
-	time_stamp := time.Now().Unix()
-	
-	prePayParams := map[string]string{
-		"appid":     utils.WxPayConf.AppId,
-		"partnerid": utils.WxPayConf.MchId,
-		//"prepayid":  payRes.PrepayId,
-		"noncestr":  payRes.NonceStr,
-		"package":   fmt.Sprintf("prepay_id=%s", payRes.PrepayId),
-		"timestamp": strconv.FormatInt(time_stamp, 10),
-		"signType":  "MD5",
-		"paySign":   payRes.Sign,
+	prePayParams := wxPaymentClient.Jsapi(payRes)
+	buf1, _ := json.Marshal(prePayParams)
+	var buf2 interface{}
+	json.Unmarshal([]byte(buf1), &buf2)
+	var imap = make(map[string]string)
+	for k, v := range buf2.(map[string]interface{}) {
+		val := v.([]interface{})
+		if k == "appId" {
+			continue
+		}
+		imap[k] = val[0].(string)
 	}
-	
-	return prePayParams, nil
+	return imap, nil
 }
 
 func AliPay(paymentId, tradeType string, money float64) (map[string]string, error) {
