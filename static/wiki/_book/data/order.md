@@ -122,6 +122,7 @@
 |confirm | int |是否确认收货 1,否 2,是 |
 |confirm_time | string |确认收货时间 |
 |order_status | int |订单状态 1,待付款 2,待审核 3,待发货 4,待收货 5,完成 6,待评价 7,取消 |
+|order_status_name | string |订单状态名称 |
 |refund_status | int |退款状态 1,未退款 2,部分退款 3,全部退款 |
 |return_status | int |退货状态 1,未退货 2,部分退货 3,全部退货 |
 |user_note | string |用户备注 |
