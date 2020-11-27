@@ -42,13 +42,31 @@ func (m *Order) Index() (list *order.ListOrderRes, err error) {
 	pageNum, _ := strconv.ParseUint(page, 10, 64)
 	pageSizeNum, _ := strconv.ParseUint(pageSize, 10, 64)
 	orderStatusNum, _ := strconv.ParseUint(orderStatus, 10, 64)
+	
+	var orderStatusArray []orderpb.OrderStatus
+	if orderStatusNum > 0 {
+		if orderStatusNum == 2 { //待发货, 待审核归类
+			orderStatusArray = []orderpb.OrderStatus{
+				orderpb.OrderStatus_PendingReview,
+				orderpb.OrderStatus_PendingShipment,
+			}
+		} else {
+			orderStatusArray = []orderpb.OrderStatus{
+				orderpb.OrderStatus(orderStatusNum),
+			}
+		}
+	}
+	
 	listCategoryReq := &orderpb.ListOrderReq{
 		Page:        pageNum,
 		PageSize:    pageSizeNum,
 		MemberId:    memberId,
-		OrderStatus: orderpb.OrderStatus(orderStatusNum),
+		OrderStatus: orderStatusArray,
 	}
 	list, err = service.NewOrder(m.Context).Index(listCategoryReq)
+	if list != nil && list.Orders == nil {
+		list.Orders = []*order.ListDetailOrderRes{}
+	}
 	return
 }
 

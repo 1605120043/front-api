@@ -26,6 +26,7 @@ func getOrderStatusName(status orderpb.OrderStatus) string {
 	orderStatusMap := make(map[orderpb.OrderStatus]string, 6)
 	
 	orderStatusMap[orderpb.OrderStatus_PendingPayment] = "待付款"
+	orderStatusMap[orderpb.OrderStatus_PendingReview] = "待发货"
 	orderStatusMap[orderpb.OrderStatus_PendingShipment] = "待发货"
 	orderStatusMap[orderpb.OrderStatus_PendingReceiving] = "待收货"
 	orderStatusMap[orderpb.OrderStatus_PendingComment] = "已完成"
@@ -141,10 +142,10 @@ func (o *Order) GetUserOrderStatusCount(userId uint64) (orderStatusCountList []*
 
 func (o *Order) CreateOrder(memberId, addressId uint64, node string, products []*orderpb.Order_Products) (*basepb.AnyRes, error) {
 	req := orderpb.Order{
-		MemberId:    memberId,
-		AddressId:   addressId,
-		UserNode:    node,
-		Products:    products,
+		MemberId:  memberId,
+		AddressId: addressId,
+		UserNode:  node,
+		Products:  products,
 	}
 	
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
