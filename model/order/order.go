@@ -46,6 +46,7 @@ type DetailOrderRes struct {
 	Confirm        orderpb.OrderConfirm               `json:"confirm"`
 	ConfirmTime    string                             `json:"confirm_time"`
 	OrderStatus    orderpb.OrderStatus                `json:"order_status"`
+	OrderStatusName string                            `json:"order_status_name"`
 	RefundStatus   orderpb.OrderRefundStatus          `json:"refund_status"`
 	ReturnStatus   orderpb.OrderReturnStatus          `json:"return_status"`
 	UserNote       string                             `json:"user_note"`
