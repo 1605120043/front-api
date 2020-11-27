@@ -20,7 +20,7 @@
 |:----- |:-------|:-----|----- |
 |page  |false |int|页码 |
 |page_size  |false |int|条数 |
-|order_status  |false |int|订单状态(0默认全部 1代付款 2待审核 3代发货 4待收货 5完成 6待评价) |
+|order_status  |false |int|订单状态( 全部（0）  待付款（1）  待发货（3）   待收货（4）) |
 
 
 #### 返回字段
