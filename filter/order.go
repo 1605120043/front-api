@@ -45,7 +45,7 @@ func (m *Order) Index() (list *order.ListOrderRes, err error) {
 	
 	var orderStatusArray []orderpb.OrderStatus
 	if orderStatusNum > 0 {
-		if orderStatusNum == 2 { //待发货, 待审核归类
+		if orderStatusNum == 3 { //待发货, 待审核归类
 			orderStatusArray = []orderpb.OrderStatus{
 				orderpb.OrderStatus_PendingReview,
 				orderpb.OrderStatus_PendingShipment,
