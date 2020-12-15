@@ -35,12 +35,13 @@ func (m *BannerAd) Index(param *shoppb.ListBannerAdReq) (bannerAdList *banner.Ba
 		return bannerAdList, nil
 	}
 
-	var httpInfo string
-	if m.Request.TLS == nil {
-		httpInfo = "http://"
-	} else {
-		httpInfo = "https://"
-	}
+	//var httpInfo string
+	//if m.Request.TLS == nil {
+	//	httpInfo = "http://"
+	//} else {
+	//	httpInfo = "https://"
+	//}
+	httpInfo := "https://"
 	eleInfoList := make([]*banner.EleInfo, 0, 8)
 	for k := range list.BannerAds {
 		if list.BannerAds[k].EleInfo == "" {
